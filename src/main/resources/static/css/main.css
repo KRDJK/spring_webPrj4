@@ -1,0 +1,553 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+/* reset css가 제공하지 않는 a, button, input 부분 초기화 */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input {
+    outline: none;
+    border: none;
+}
+
+/* common style */
+/* float을 아예 안쓸거라 clearfix는 안할거임 */
+
+.wrap {
+    font-size: 15px;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.hide {
+    /* 무조건 하라고 뒤에 !important; */
+    display: none !important;
+}
+
+/* header style */
+
+header {
+    /* background: red; */
+    /* 사진 때문에 가려져서 임시로 마진 바텀을 줘서 영역 확인을 해가며 작업한 후 작업이 끝나면 마진 없앰. */
+    /* margin-bottom: 500px; */
+
+    position: fixed;
+    /* position으로 가로 길이가 깨져버려서 다시 명시 */
+    width: 100%;
+    top: 0;
+    /* 항상 모든 겹들을 뚫고 맨 앞에 있어야 하기 때문! */
+    z-index: 1000;
+}
+
+header.on {
+    background: #222;
+    border-bottom: 1px solid #2c2c2c;
+    /* 0.4초에 걸쳐서 */
+    transition: .4s;
+}
+
+header .inner-header {
+    /* background: orange; */
+    width: 92%;
+    margin: 0 auto;
+    height: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-weight: bold;
+    color: #fff;
+}
+
+header .inner-header .logo {
+    /* background: tomato; */
+    flex: 1;
+    width: 150px;
+}
+
+header .inner-header .logo a {
+    display: block;
+    width: 100%;
+}
+
+header .inner-header .logo a img {
+    /* width: 100%; */
+    /* 가로뿐만이 아니라 세로를 조정해도 비율에 맞춰서 다른 곳이 맞춰짐. */
+    height: 60px;
+}
+
+header .inner-header .intro-text {
+    /* background: greenyellow; */
+    flex: 4;
+    /* color: #fff; */
+    /* 대문자 만들기 */
+    text-transform: uppercase;
+    /* font-weight: bold; */
+    margin-left: 40px;
+}
+
+header .inner-header .menu-open {
+    /* background: skyblue; */
+    flex: 1;
+    font-size: 16px;
+    display: flex;
+    justify-content: flex-end;
+    /* 교차축 정렬로 메뉴 아이콘과 menu 텍스트를 맞추기 위해 */
+    align-items: center;
+}
+
+header .inner-header .menu-open .lnr-menu {
+    font-size: 33px;
+    margin-left: 15px;
+}
+
+
+/* header gnb style */
+header .gnb {
+    background: #000;
+    color: #666;
+    height: 100vh;
+    font-size: 40px;
+    padding: 70px 100px;
+    box-sizing: border-box;
+
+    position: fixed;
+    z-index: 2000;
+    right: -100%;
+    top: 0;
+    transition: .6s;
+
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+header .gnb.on {
+    right: 0;
+}
+
+header .gnb .close {
+    display: block;
+    color: #fff;
+}
+
+header .gnb ul {
+    margin-right: 200px;
+}
+
+header .gnb ul li {
+    font-weight: bold;
+    line-height: 1.7;
+}
+
+header .gnb ul li:hover,
+header .gnb ul li.active {
+    /* li에 클래스 active가 붙는 경우도 같이 묶어서 처리. */
+    color: #fff;
+}
+
+/* section visual style */
+section.visual .slide li {
+    /* 포지션을 넣으면 크기가 깨질 수도 있기 때문에 */
+    width: 100%;
+    /* 풀 스크린이 되어야 하기 때문 */
+    height: 100vh;
+    overflow: hidden;
+    /* 아래 img 태그가 얘(부모 태그) 안에서 움직여야 하기 때문 */
+    position: relative;
+}
+
+section.visual .slide li img {
+    width: 100%;
+    /* 이미지 짤린 부분을 끌어올려서 짤린 아랫부분을 보여주고 싶을 때 */
+    position: absolute;
+    top: -100px;
+}
+
+section.visual .slide li .txt {
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    /* y축만 건드림 */
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #fff;
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
+}
+
+section.visual .slide li .txt h3 {
+    margin: 30px 0;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+section.visual .slide li .scroll {
+    /* background: orange; */
+    position: absolute;
+    left: 50px;
+    bottom: 10%;
+    font-size: 14px;
+    font-weight: 700;
+    color: #ccc;
+    /* 글자 기울기 */
+    transform: rotate(-90deg);
+}
+
+/* slick 이전 다음 버튼 스타일 변경 */
+.slick-arrow {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    background: #fff;
+    border: none;
+    z-index: 5;
+    /* prev, next 텍스트 치워버리기. */
+    text-indent: -9999px;
+    cursor: pointer;
+}
+
+.slick-arrow.slick-prev {
+    /* 이걸 없애면 버튼끼리 겹쳐버림 */
+    /* 왜 60이냐? 위에 준 세로 값이 60이니까! 딱 그만큼 올라가라고 */
+    bottom: 60px;
+}
+
+.slick-arrow::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    color: #888;
+    font-size: 20px;
+    left: 0;
+    top: 0;
+    text-indent: 0;
+    font-weight: 300;
+}
+
+.slick-arrow.slick-next::after {
+    content: '>';
+}
+.slick-arrow.slick-prev::after {
+    content: '<';
+}
+
+.slick-arrow:hover {
+    background: #cccccc;
+    transform: all .5s;
+}
+
+.slick-arrow:hover::after {
+    font-size: 28px;
+    color: #333333;
+    transition: all .2s;
+}
+
+.slick-active .txt p {
+    animation: txt1 .8s;
+}
+@keyframes txt1 {
+    0% {opacity: 0; transform: rotateX(180deg) translateY(-150px); }
+    20% {opacity: 0; transform: rotateX(180deg) translateY(-150px); }
+    100% {opacity: 1; transform: rotateX(0) translateY(0); }
+}
+
+.slick-active .txt a {
+    animation: txt2 .8s;
+}
+@keyframes txt2 {
+    0% {opacity: 0; transform: rotateX(180deg) translateY(150px); }
+    20% {opacity: 0; transform: rotateX(180deg) translateY(150px); }
+    100% {opacity: 1; transform: rotateX(0) translateY(0); }
+}
+
+.slick-active .txt h3 {
+    animation: txt3 .7s;
+}
+@keyframes txt3 {
+    0% {transform: translateX(0); }
+    40% {transform: translateX(-50px); }
+    100% {transform: translateX(0); }
+}
+
+.slick-active .scroll {
+    animation: scroll 1s;
+}
+@keyframes scroll {
+    0% {opacity: 0; left: -100px; }
+    30% {opacity: 0; left: -100px; }
+    100% {opacity: 1; left: 50px; }
+}
+
+section.visual .slick-active img {
+    animation: img 1s;
+}
+@keyframes img {
+    0% {opacity: 0; left: -80px; transform: scale(0.95) }
+    100% {opacity: 1; left: 0; }
+}
+
+ /* section contents style */
+ /* > .main-text */
+
+ section.contents {
+    background: #1b1b1b;
+    color: #fff;
+    padding: 120px 0;
+ }
+
+ section.contents .main-text {
+    /* background: tomato; */
+    width: 65%;
+    margin: 0 auto;
+    font-size: 25px;
+    /* 자식인 h3와 p를 수평배치해주려고 */
+    display: flex;
+    /* 밑에 가상요소의 기준이 되어주기 위해 */
+    position: relative;
+ }
+
+ /* 가상 요소를 만들어서 세팅 */
+ section.contents .main-text::before {
+     content: '';
+     width: 100px;
+     height: 100px;
+     border-radius: 50%;
+     background: #ffec03;
+     position: absolute;
+     left: 70px;
+     top: 100px;
+ }
+
+ section.contents .main-text::after {
+     content: '”';
+     font-size: 300px;
+     position: absolute;
+     left: 0;
+     top: 100px;
+ }
+
+ /* 가상요소 끝. */
+
+ section.contents .main-text h3 {
+    /* background: red; */
+    flex: 1;
+    font-weight: bold;
+ }
+
+ section.contents .main-text p {
+    /* background: blue; */
+    flex: 1.5;
+    line-height: 1.4;
+    font-size: 23px;
+ }
+
+ section.contents .main-text p span {
+     display: block;
+     margin-top: 30px;
+     font-size: 20px;
+     color: #999;
+ }
+
+/* >.project */
+
+ section.contents .project .top {
+     /* background: tomato; */
+     width: 65%;
+     margin: 200px auto 60px;
+     display: flex;
+     justify-content: space-between;
+ }
+
+ section.contents .project .top h3 {
+    /* background: red; */
+    font-size: 45px;
+    font-weight: bold;
+ }
+
+ section.contents .project .top a {
+    /* background: blue; */
+    font-size: 18px;
+}
+
+section.contents .project ul {
+    /* background: tomato; */
+    display: flex;
+    justify-content: space-evenly;
+}
+
+section.contents .project ul li {
+    width: 24%;
+    height: 400px;
+    /* 세로 400이 넘으면 숨기겠다. */
+    overflow: hidden;
+
+    /* 밑에 가려진 .name 부분이 이 박스를 기준으로 나오게 해야해서 */
+    position: relative;
+}
+
+section.contents .project ul li a {
+    display: block;
+}
+
+/* 가상요소 만들어서 hover 했을 때 음영효과 넣기 */
+section.contents .project ul li a::before {
+    content: '';
+    width: 0;
+    height: 100%;
+    background: rgba(27, 27, 27, .9);
+    position: absolute;
+    transition: 0.6s;
+}
+
+section.contents .project ul li a:hover::before {
+    width: 100%;
+}
+
+/* 가상요소 만들어서 hover 했을 때 음영효과 넣기 끝 */
+
+section.contents .project ul li a img {
+    width: 100%;
+}
+
+section.contents .project ul li a .name {
+    width: 250px;
+    padding: 15px;
+    box-sizing: border-box;
+    background: #1b1b1b;
+    font-size: 20px;
+    text-align: right;
+
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+
+    /* 일단 보이면 안되니까!! hover했을 때 보이게 하려고 */
+    opacity: 0;
+}
+
+section.contents .project ul li a:hover .name {
+    opacity: 1;
+    animation: show-name-box 1s;
+}
+
+@keyframes show-name-box {
+    0% {
+        opacity: 0;
+        bottom: -30px;
+    }
+
+    100% {
+        opacity: 1;
+        bottom: 10px;
+    }
+}
+
+section.contents .project ul li a .name span {
+    display: block;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* > .project 끝. */
+
+/* > .partner */
+section.contents .partner {
+    /* background: tomato; */
+    width: 65%;
+    margin: 170px auto 100px;
+}
+
+section.contents .partner h3 {
+    font-size: 17px;
+    margin-bottom: 80px;
+}
+
+section.contents .partner ul {
+    /* background: orange; */
+    display: flex;
+    flex-wrap: wrap;
+}
+
+section.contents .partner ul li {
+    /* border: 2px solid #000;
+    box-sizing: border-box; */
+    width: 25%;
+    margin-bottom: 80px;
+
+    /* 하위 텍스트(이미지)들을 정중앙 배치하기 위해서 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+section.contents .partner ul li img {
+    opacity: 0.3;
+    transition: 0.3s;
+}
+
+section.contents .partner ul li img:hover {
+    opacity: 1;
+}
+
+/* > .partner 끝 */
+
+/* >. contact style */
+section.contents .contact {
+    width: 90%;
+    background: url('/img/contact.jpg') no-repeat center/cover fixed;
+    padding: 220px 0;
+}
+section.contents .contact .inner {
+    /* 걍 70퍼로 잡네.. 이런거 잘 따라해보자 */
+    /* background: red; */
+    width: 70%;
+    margin: 0 auto;
+    font-size: 17px;
+    line-height: 1.4;
+}
+section.contents .contact .inner .tel {
+    /* background: red; */
+    font-size: 55px;
+    font-weight: 700;
+    margin: 50px 0;
+}
+
+/* > .contact 끝 */
+
+/* footer style */
+footer {
+    background: #1b1b1b;
+    color: #999;
+    padding: 0 80px 80px;
+}
+footer ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+footer ul li:nth-child(2) {
+    color: #eee;
+    font-size: 16px;
+    line-height: 2;
+}
+footer ul li:nth-child(2) span {
+    font-weight: 700;
+    margin-right: 10px;
+    color: #999;
+}
+
+footer .go-top {
+    color: #fff;
+    font-size: 50px;
+    position: fixed;
+    right: 50px;
+    bottom: 60px;    
+}
+
+/* footer 끝 */
