@@ -21,6 +21,7 @@ public class Board { // 보통 실무에서는 테이블명이랑 똑같이 만�
     public Board(ResultSet rs) throws SQLException {
         this.boardNo = rs.getLong("board_no");
         this.writer = rs.getString("writer");
+        this.title = rs.getString("title");
         this.content = rs.getString("content");
         this.viewCnt = rs.getLong("view_cnt");
         this.regDate = rs.getDate("reg_date");

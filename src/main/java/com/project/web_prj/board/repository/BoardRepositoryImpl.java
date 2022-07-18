@@ -5,8 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -43,19 +46,36 @@ public class BoardRepositoryImpl implements BoardRepository {
 
 
     @Override
+        // queryForObject의 리턴 타입은 제네릭 타입이기 때문에 이 메서드에서 Board 타입을 리턴하기로 해서 Board로 잡아주는 것.
     public Board findOne(Long boardNo) {
-        return null;
+        String sql = "SELECT * FROM tbl_board WHERE board_no=?";
+
+                                        // rowNum은 안쓰지만 오버라이딩 규약에 따라 가는 것일 뿐!
+        return template.queryForObject(sql, (rs, rowNum) -> new Board(rs), boardNo);
     }
 
 
     @Override
     public boolean remove(Long boardNo) {
-        return false;
+        String sql = "DELETE FROM tbl_board WHERE board_no=?";
+
+        return template.update(sql, boardNo) == 1;
     }
 
 
     @Override
     public boolean modify(Board board) {
-        return false;
+        String sql = "UPDATE tbl_board SET writer = ?, title = ?, content = ? WHERE board_no = ?";
+
+        return template.update(sql, board.getWriter(), board.getTitle(), board.getContent(), board.getBoardNo()) == 1;
+    }
+
+
+    @Override
+    public Long getTotalCount() {
+        String sql = "SELECT COUNT(board_no) AS cnt FROM tbl_board";
+
+//        return template.queryForObject(sql, (rs, rowNum) -> rs.getLong("cnt"));
+        return template.queryForObject(sql, Long.class); // 음..?
     }
 }
