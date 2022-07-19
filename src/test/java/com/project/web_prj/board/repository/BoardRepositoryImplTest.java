@@ -1,6 +1,7 @@
 package com.project.web_prj.board.repository;
 
 import com.project.web_prj.board.domain.Board;
+import com.project.web_prj.common.paging.Page;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -101,5 +102,14 @@ class BoardRepositoryImplTest {
     void countTest() {
         Long totalCount = repository.getTotalCount();
         assertTrue(totalCount == 300);
+    }
+
+
+    @Test
+    @DisplayName("원하는 페이지수와 게시물 양에 따라 게시물 목록을 조회해야 한다.")
+    void pagingTest() {
+        Page page = new Page(2, 10);
+
+        repository.findAll(page).forEach(System.out::println);
     }
 }
