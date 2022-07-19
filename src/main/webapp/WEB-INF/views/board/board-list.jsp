@@ -56,7 +56,7 @@
                         <td>${b.writer}</td>
                         <td title="${b.title}">${b.shortTitle}</td>
                         <td>0</td>
-                        <td>${b.regDate}</td>
+                        <td>${b.prettierDate}</td>
                     </tr>
                 </c:forEach>
             </table>

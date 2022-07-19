@@ -99,6 +99,7 @@
             }
             location.href = '/board/delete?boardNo=${b.boardNo}';
         };
+        
         //목록버튼
         $listBtn.onclick = e => {
             location.href = '/board/list';

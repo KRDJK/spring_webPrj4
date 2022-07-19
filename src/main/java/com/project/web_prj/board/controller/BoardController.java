@@ -25,10 +25,10 @@ public class BoardController {
     // 게시물 목록 요청
     @GetMapping("/list") // http://localhost:8183/board/list
     public String list(Model model) {
-        log.info("controller request /board/list GET!!");
+        log.debug("controller request /board/list GET!!");
 
         List<Board> boardList = boardService.findAllService();
-//        log.info("return data - {}", boardList);
+        log.debug("return data - {}", boardList);
 
 
         model.addAttribute("bList", boardList);
@@ -73,8 +73,13 @@ public class BoardController {
     
     // 게시글 수정 화면 요청
     @GetMapping("/modify")
-    public String modify(int boardNo) {
+    public String modify(Long boardNo, Model model) {
         log.info("controller request /board/modify GET!! - {}", boardNo);
+
+        Board board = boardService.findOneService(boardNo);
+        log.info("find article: {}", board);
+
+        model.addAttribute("board", board);
 
         return "board/board-modify";
     }
@@ -85,8 +90,17 @@ public class BoardController {
     public String modify(Board board) {
         log.info("controller request /board/modify POST!! - {}", board);
 
+        boolean flag = boardService.modifyService(board);
 
+        return flag ? "redirect:/board/content/" + board.getBoardNo() : "redirect:/";
+    }
+    
+    
+    // 게시글 삭제 요청
+    @GetMapping("/delete")
+    public String delete(Long boardNo) {
+        log.info("controller request /board/delete GET! - bno: {}", boardNo);
 
-        return "";
+        return boardService.removeService(boardNo) ? "redirect:/board/list" : "redirect:/";
     }
 }
