@@ -7,19 +7,25 @@
     <%@ include file="../include/static-head.jsp" %>
 
     <style>
+        
+        
         .board-list {
             width: 70%;
-            margin: 0 auto;
+            margin: 230px auto;
         }
 
         .board-list .articles {
-            margin: 250px auto 100px;
+            margin: 20px auto 100px;
             border-collapse: collapse;
             font-size: 1.5em;
             border-radius: 10px;
         }
 
-        
+
+        .board-list .btn-amount a {
+            float: right !important; 
+        }
+
 
         header {
             background: #222;
@@ -69,9 +75,34 @@
     <div class="wrap">
 
         <%@ include file="../include/header.jsp" %>
+        
+        <!-- <div class="amount-section">
+            <div class="btn-amount10">
+                <a href="/board/list?pageNum=${pm.page.pageNum}&amount=10">10개씩</a>
+            </div>
+
+            <div class="btn-amount20">
+                <a href="/board/list?pageNum=${pm.page.pageNum}&amount=20">20개씩</a>
+            </div>
+
+            <div class="btn-amount30">
+                <a href="/board/list?pageNum=${pm.page.pageNum}&amount=30">30개씩</a>
+            </div>
+        </div> -->
+        
+        
 
         <div class="board-list">
+
+            <div class="btn-aomunt">
+                <a class="btn btn-outline-danger" href="/board/list?pageNum=${pm.page.pageNum}&amount=10" role="button">10</a>
+                <a class="btn btn-outline-danger" href="/board/list?pageNum=${pm.page.pageNum}&amount=20" role="button">20</a>
+                <a class="btn btn-outline-danger" href="/board/list?pageNum=${pm.page.pageNum}&amount=30" role="button">30</a>
+            </div>
+            
+
             <table class="table table-dark table-striped table-hover articles">
+                
                 <tr>
                     <th>번호</th>
                     <th>작성자</th>
@@ -108,12 +139,13 @@
                           <li class="page-item"><a class="page-link" href="/board/list?pageNum=${n}">${n}</a></li>
                       </c:forEach>
                       
-                      
+
                       <c:if test="${pm.next}">
                           <li class="page-item"><a class="page-link" href="/board/list?pageNum=${pm.endPage + 1}">Next</a></li>
                       </c:if>
                     </ul>
                   </nav>
+
 
 
                 <!-- 글쓰기 버튼 영역 -->
@@ -131,6 +163,17 @@
     </div>
 
     <script>
+
+        const $liList = document.querySelectorAll('.page-item');
+
+        for (let li of $liList) {
+            if (li.firstElementChild.textContent.trim() === '${pm.page.pageNum}') {
+                li.classList.add('active');
+                break;
+            }
+        }
+
+
 
         const msg = '${msg}';
         console.log('msg: ', msg);
