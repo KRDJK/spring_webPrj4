@@ -100,7 +100,7 @@ class BoardRepositoryImplTest {
     @Test
     @DisplayName("전체 게시물 수를 조회해야 한다.")
     void countTest() {
-        Long totalCount = repository.getTotalCount();
+        int totalCount = repository.getTotalCount();
         assertTrue(totalCount == 300);
     }
 

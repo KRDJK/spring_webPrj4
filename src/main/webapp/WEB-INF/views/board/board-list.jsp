@@ -19,19 +19,49 @@
             border-radius: 10px;
         }
 
-        .board-list .btn-write {
-            /* background: orange; */
-            text-align: right;
-            position: relative;
-            top: -70px;
-        }
+        
 
         header {
             background: #222;
             border-bottom: 1px solid #2c2c2c;
         }
 
+
+        /* pagination style */
+        .bottom-section {
+            margin-top: -50px;
+            margin-bottom: 100px;
+            display: flex;
+        }
+
+
+        .bottom-section nav {
+            flex: 9;
+            display: flex;
+            justify-content: center;
+        }
+
+
+        .bottom-section .btn-write {
+            flex: 1;
+        }
+
+
+        .pagination-custom a {
+            color: #444 !important;
+        }
+
+
+        .pagination-custom li.active a
+        , .pagination-custom li:hover a
+         {
+            background: #333 !important;
+            color: #fff !important; 
+        }
+
     </style>
+
+
 </head>
 
 <body>
@@ -61,9 +91,38 @@
                 </c:forEach>
             </table>
 
-            <div class="btn-write">
-                <a class="btn btn-outline-danger btn-lg" href="/board/write">글쓰기</a>
+
+            <!-- 게시글 목록 하단 영역 -->
+            <div class="bottom-section">
+
+                <!-- 페이지 버튼 영역 -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination pagination-lg pagination-custom">
+
+                      <c:if test="${pm.prev}">
+                          <li class="page-item"><a class="page-link" href="/board/list?pageNum=${pm.beginPage - 1}">Prev</a></li>
+                      </c:if>  
+                    
+                                                        <!-- step=1인 경우,, 생략 가능!! -->
+                      <c:forEach var="n" begin="${pm.beginPage}" end="${pm.endPage}" step="1"> 
+                          <li class="page-item"><a class="page-link" href="/board/list?pageNum=${n}">${n}</a></li>
+                      </c:forEach>
+                      
+                      
+                      <c:if test="${pm.next}">
+                          <li class="page-item"><a class="page-link" href="/board/list?pageNum=${pm.endPage + 1}">Next</a></li>
+                      </c:if>
+                    </ul>
+                  </nav>
+
+
+                <!-- 글쓰기 버튼 영역 -->
+                <div class="btn-write">
+                    <a class="btn btn-outline-danger btn-lg" href="/board/write">글쓰기</a>
+                </div>
             </div>
+
+
         </div>
 
 

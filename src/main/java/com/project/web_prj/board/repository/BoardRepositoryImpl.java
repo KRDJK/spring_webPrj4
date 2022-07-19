@@ -115,11 +115,11 @@ public class BoardRepositoryImpl implements BoardRepository {
 
 
     @Override
-    public Long getTotalCount() {
+    public int getTotalCount() {
         String sql = "SELECT COUNT(board_no) AS cnt FROM tbl_board";
 
 //        return template.queryForObject(sql, (rs, rowNum) -> rs.getLong("cnt"));
-        return template.queryForObject(sql, Long.class); // 음..?
+        return template.queryForObject(sql, Integer.class); // 음..?
     }
 
     @Override
