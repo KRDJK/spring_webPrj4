@@ -78,4 +78,11 @@ public class BoardRepositoryImpl implements BoardRepository {
 //        return template.queryForObject(sql, (rs, rowNum) -> rs.getLong("cnt"));
         return template.queryForObject(sql, Long.class); // 음..?
     }
+
+    @Override
+    public void upViewCount(Long boardNo) {
+        String sql = "UPDATE tbl_board SET view_cnt = view_cnt+1 WHERE board_no = ?";
+
+        template.update(sql, boardNo);
+    }
 }

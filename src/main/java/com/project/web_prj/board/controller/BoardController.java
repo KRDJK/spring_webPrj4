@@ -7,7 +7,10 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -39,10 +42,10 @@ public class BoardController {
 
     // 게시물 상세 조회 요청
     @GetMapping("/content/{boardNo}") // http://localhost:8183/board/content/150
-    public String content(@PathVariable Long boardNo, Model model) {
+    public String content(@PathVariable Long boardNo, Model model, HttpServletRequest request, HttpServletResponse response) {
         log.info("controller request /board/content GET! - {}", boardNo);
 
-        Board board = boardService.findOneService(boardNo);
+        Board board = boardService.findOneService(boardNo, request, response);
         log.info("return data - {}", board);
 
         model.addAttribute("b", board);
@@ -62,21 +65,29 @@ public class BoardController {
 
     // 게시물 작성 후 등록 요청
     @PostMapping("/write")
-    public String write(Board board) { // @RequestBody <- 테스트 할 때만 붙이고 끝났으면 떼라.
+    public String write(Board board, RedirectAttributes ra) { // @RequestBody <- 테스트 할 때만 붙이고 끝났으면 떼라.
         log.info("controller request /board/write POST! - {}", board);
 
         boolean flag = boardService.saveService(board); // 테스트하면서 DB로 보내는 것도 잘 등록되는 것을 확인했다!
 
+
+        // 게시물 등록에 성공하면 클라이언트에게 성공메시지 전송
+        if (flag) ra.addFlashAttribute("msg", "reg-success");
+        // 모델에 담으면 HttpServletRequest 객체에 저장됨. => 리다이렉트하면 사라짐. 포워딩은 유지됨.
+        // 리다이렉트 시에도 데이터를 가져가고 싶으면 RedirectAttributes 객체를 활용하라!
+
+
         return flag ? "redirect:/board/list" : "redirect:/";
+        // 왜 리다이렉트를 해야할까?? 글 작성 이후 /board/list 요청에 따른 비즈니스 로직을 컨트롤러가 다시 수행하여 출력해야 하기 때문에!!!
     }
 
     
     // 게시글 수정 화면 요청
     @GetMapping("/modify")
-    public String modify(Long boardNo, Model model) {
+    public String modify(Long boardNo, Model model, HttpServletRequest request, HttpServletResponse response) {
         log.info("controller request /board/modify GET!! - {}", boardNo);
 
-        Board board = boardService.findOneService(boardNo);
+        Board board = boardService.findOneService(boardNo, request, response);
         log.info("find article: {}", board);
 
         model.addAttribute("board", board);

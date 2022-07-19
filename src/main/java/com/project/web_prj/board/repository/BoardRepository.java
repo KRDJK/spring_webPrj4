@@ -28,4 +28,8 @@ public interface BoardRepository {
 
     // 전체 게시물 수 조회
     Long getTotalCount();
+
+
+    // 조회수 상승 처리
+    void upViewCount(Long boardNo);
 }

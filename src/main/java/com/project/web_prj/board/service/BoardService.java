@@ -5,7 +5,12 @@ import com.project.web_prj.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -72,9 +77,38 @@ public class BoardService {
 
 
     // 게시물 상세 조회 요청 중간 처리
-    public Board findOneService(Long boardNo) {
+    @Transactional // sql이 여러개 돌 때 전부 성공해야 정상 작동! 하나라도 실패하면 롤백하게 만들기!!
+    public Board findOneService(Long boardNo, HttpServletRequest request, HttpServletResponse response) { // response는 쿠키를 전송하기 위해 사용!!
         log.info("findOne service start - {}", boardNo);
-        return repository.findOne(boardNo);
+
+        Board board = repository.findOne(boardNo);
+
+        // 상세조회함과 동시에 조회수 상승 기능
+        makeUpViewCount(boardNo, request, response);
+
+
+        return board;
+    }
+
+
+    // 조회수 상승 (쿠키 부여 및 쿠키 보유 여부 확인까지) 메서드
+    private void makeUpViewCount(Long boardNo, HttpServletRequest request, HttpServletResponse response) {
+        // 쿠키를 조회 - 해당 이름의 쿠키가 있으면 쿠키가 들어오고 없으면 null이 들어옴.
+        Cookie foundCookie = WebUtils.getCookie(request, "b" + boardNo);
+
+
+        if (foundCookie == null) {
+            // 해당 게시물 번호에 해당하는 쿠키가 있는지 확인
+            // 쿠키가 없으면 조회수를 상승시켜주고 쿠키를 만들어서 클라이언트에 전송
+//        new Cookie("쿠키 이름", "쿠키값"); // 쿠키 생성 javax.servlet~~
+            repository.upViewCount(boardNo);
+
+            Cookie cookie = new Cookie("b" + boardNo, String.valueOf(boardNo));// 쿠키 생성
+            cookie.setMaxAge(60); // 쿠키 수명 설정 (초 단위로 설정) * 60 * 24 * 7 를 통해서 간격 조절 가능
+            cookie.setPath("/board/content"); // 쿠키 적용 범위 제한 설정
+
+            response.addCookie(cookie); // 클라이언트에게 쿠키 전송
+        }
     }
 
 
