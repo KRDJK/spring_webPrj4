@@ -1,6 +1,7 @@
 package com.project.web_prj.board.service;
 
 import com.project.web_prj.board.domain.Board;
+import com.project.web_prj.board.repository.BoardMapper;
 import com.project.web_prj.board.repository.BoardRepository;
 import com.project.web_prj.common.paging.Page;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final BoardRepository repository;
+    private final BoardMapper repository;
 
 
     // 게시물 등록 요청 중간 처리
@@ -34,15 +35,15 @@ public class BoardService {
 
 
     // 게시물 전체 조회 요청 중간 처리
-    public List<Board> findAllService() {
-        log.info("findAll service start");
-        List<Board> boardList = repository.findAll();
-
-        // 목록 중간 데이터처리
-        processConverting(boardList);
-
-        return boardList;
-    }
+//    public List<Board> findAllService() {
+//        log.info("findAll service start");
+//        List<Board> boardList = repository.findAll();
+//
+//        // 목록 중간 데이터처리
+//        processConverting(boardList);
+//
+//        return boardList;
+//    }
 
 
     // 게시물 전체 조회 요청 중간 처리 with paging
@@ -144,8 +145,12 @@ public class BoardService {
 
 
     // 게시물 수정 요청 중간 처리
-    public boolean modifyService(Board board) {
+    public boolean modifyService(Board board, HttpServletRequest request, HttpServletResponse response) {
         log.info("modify service start - {}", board);
+
+        makeUpViewCount(board.getBoardNo(), request, response);
+
+
         return repository.modify(board);
     }
 }

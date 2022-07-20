@@ -102,6 +102,9 @@ public class BoardController {
         log.info("find article: {}", board);
 
         model.addAttribute("board", board);
+        // ~~~~
+        model.addAttribute(request);
+        model.addAttribute(response);
 
         return "board/board-modify";
     }
@@ -109,10 +112,12 @@ public class BoardController {
 
     // 게시글 수정 완료 후 반영 요청
     @PostMapping("/modify")
-    public String modify(Board board) {
+    public String modify(Board board, HttpServletRequest request, HttpServletResponse response) {
         log.info("controller request /board/modify POST!! - {}", board);
 
-        boolean flag = boardService.modifyService(board);
+        boolean flag = boardService.modifyService(board, request, response);
+
+
 
         return flag ? "redirect:/board/content/" + board.getBoardNo() : "redirect:/";
     }
