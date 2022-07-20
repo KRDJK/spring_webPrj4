@@ -36,7 +36,7 @@ public interface BoardMapper {
 
 
     // 전체 게시물 수 조회
-    int getTotalCount();
+    int getTotalCount(Search search);
 
 
     // 조회수 상승 처리

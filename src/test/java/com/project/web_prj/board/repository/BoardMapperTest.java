@@ -97,7 +97,10 @@ class BoardMapperTest {
     @Test
     @DisplayName("총 게시물 수가 정확히 구해져야 한다.")
     void getTotalCountTest() {
-        int totalCount = mapper.getTotalCount();
+        Search search = new Search();
+        search.setType("title");
+        search.setKeyword("30");
+        int totalCount = mapper.getTotalCount(search);
 
         System.out.println("totalCount = " + totalCount);
     }
