@@ -4,6 +4,7 @@ import com.project.web_prj.board.domain.Board;
 import com.project.web_prj.board.repository.BoardMapper;
 import com.project.web_prj.board.repository.BoardRepository;
 import com.project.web_prj.common.paging.Page;
+import com.project.web_prj.common.search.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,25 @@ public class BoardService {
         HashMap<String, Object> findDataMap = new HashMap<>();
 
         List<Board> boardList = repository.findAll(page);
+
+
+        // 목록 중간 데이터처리
+        processConverting(boardList);
+
+
+        findDataMap.put("bList", boardList);
+        findDataMap.put("tc", repository.getTotalCount());
+
+        return findDataMap;
+    }
+
+    // 게시물 전체 조회 요청 중간 처리 with searching
+    public Map<String, Object> findAllService(Search search) {
+        log.info("findAll service start");
+
+        HashMap<String, Object> findDataMap = new HashMap<>();
+
+        List<Board> boardList = repository.findAll2(search);
 
 
         // 목록 중간 데이터처리
@@ -145,11 +165,8 @@ public class BoardService {
 
 
     // 게시물 수정 요청 중간 처리
-    public boolean modifyService(Board board, HttpServletRequest request, HttpServletResponse response) {
+    public boolean modifyService(Board board) {
         log.info("modify service start - {}", board);
-
-        makeUpViewCount(board.getBoardNo(), request, response);
-
 
         return repository.modify(board);
     }

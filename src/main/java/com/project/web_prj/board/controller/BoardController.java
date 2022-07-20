@@ -4,6 +4,7 @@ import com.project.web_prj.board.domain.Board;
 import com.project.web_prj.board.service.BoardService;
 import com.project.web_prj.common.paging.Page;
 import com.project.web_prj.common.paging.PageMaker;
+import com.project.web_prj.common.search.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -30,16 +31,16 @@ public class BoardController {
 
     // 게시물 목록 요청
     @GetMapping("/list") // http://localhost:8183/board/list
-    public String list(Page page, Model model) {
-        log.info("controller request /board/list GET!! -{}", page);
+    public String list(Search search, Model model) {
+        log.info("controller request /board/list GET!! -{}", search);
 
 
-        Map<String, Object> boardMap = boardService.findAllService(page);
+        Map<String, Object> boardMap = boardService.findAllService(search);
         log.debug("return data - {}", boardMap);
 
 
         // 페이지 정보 생성
-        PageMaker pm = new PageMaker(page, (Integer) boardMap.get("tc"));
+        PageMaker pm = new PageMaker(new Page(search.getPageNum(), search.getAmount()), (Integer) boardMap.get("tc"));
 
 
         model.addAttribute("bList", boardMap.get("bList"));
@@ -102,9 +103,6 @@ public class BoardController {
         log.info("find article: {}", board);
 
         model.addAttribute("board", board);
-        // ~~~~
-        model.addAttribute(request);
-        model.addAttribute(response);
 
         return "board/board-modify";
     }
@@ -112,10 +110,10 @@ public class BoardController {
 
     // 게시글 수정 완료 후 반영 요청
     @PostMapping("/modify")
-    public String modify(Board board, HttpServletRequest request, HttpServletResponse response) {
+    public String modify(Board board) {
         log.info("controller request /board/modify POST!! - {}", board);
 
-        boolean flag = boardService.modifyService(board, request, response);
+        boolean flag = boardService.modifyService(board);
 
 
 
