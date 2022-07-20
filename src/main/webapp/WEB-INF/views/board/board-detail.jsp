@@ -92,6 +92,7 @@
             location.href = '/board/modify?boardNo=${b.boardNo}';
         };
 
+
         //삭제버튼
         $delBtn.onclick = e => {
             if(!confirm('정말 삭제하시겠습니까?')) {
@@ -100,9 +101,10 @@
             location.href = '/board/delete?boardNo=${b.boardNo}';
         };
         
+        
         //목록버튼
         $listBtn.onclick = e => {
-            location.href = '/board/list';
+            location.href = '/board/list/?pageNum=${p.pageNum}&amount=${p.amount}';
         };
     </script>
 

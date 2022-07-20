@@ -116,7 +116,8 @@ public class BoardService {
 
     // 조회수 상승 (쿠키 부여 및 쿠키 보유 여부 확인까지) 메서드
     private void makeUpViewCount(Long boardNo, HttpServletRequest request, HttpServletResponse response) {
-        // 쿠키를 조회 - 해당 이름의 쿠키가 있으면 쿠키가 들어오고 없으면 null이 들어옴.
+        // 클라이언트로부터 어떤 요청이 발생하면 그 요청 정보 속에서 쿠키를 조회한다.
+        // - 해당 이름의 쿠키가 있으면 쿠키가 들어오고 없으면 null이 들어옴.
         Cookie foundCookie = WebUtils.getCookie(request, "b" + boardNo);
 
 

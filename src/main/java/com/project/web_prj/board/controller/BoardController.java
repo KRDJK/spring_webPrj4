@@ -52,13 +52,14 @@ public class BoardController {
 
     // 게시물 상세 조회 요청
     @GetMapping("/content/{boardNo}") // http://localhost:8183/board/content/150
-    public String content(@PathVariable Long boardNo, Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String content(@PathVariable Long boardNo, Page page, Model model, HttpServletRequest request, HttpServletResponse response) {
         log.info("controller request /board/content GET! - {}", boardNo);
 
         Board board = boardService.findOneService(boardNo, request, response);
         log.info("return data - {}", board);
 
         model.addAttribute("b", board);
+        model.addAttribute("p", page);
 
         return "board/board-detail";
     }

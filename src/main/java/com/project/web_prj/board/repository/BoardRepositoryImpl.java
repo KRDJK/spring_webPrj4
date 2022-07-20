@@ -23,7 +23,7 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     // lombok을 안쓴다면 이렇게 해줘야 함!! 이게 원문이다.
 //    @Autowired
-//    public BoardRepositoryImpl(JdbcTemplate template) {
+//    public BoardRepositoryImpl (JdbcTemplate template) {
 //        this.template = template;
 //    }
 

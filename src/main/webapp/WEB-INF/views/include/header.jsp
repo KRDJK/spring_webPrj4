@@ -5,7 +5,7 @@
 <header data-scroll="${scroll}">
     <div class="inner-header">
         <h1 class="logo">
-            <a href="#">
+            <a href="/">
                 <img src="/img/logo.png" alt="로고이미지">
             </a>
         </h1>
