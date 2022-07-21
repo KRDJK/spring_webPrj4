@@ -47,7 +47,7 @@ public class BoardService {
 //    }
 
 
-    /*// 게시물 전체 조회 요청 중간 처리 with paging
+    // 게시물 전체 조회 요청 중간 처리 with paging
     public Map<String, Object> findAllService(Page page) {
         log.info("findAll service start");
 
@@ -64,7 +64,7 @@ public class BoardService {
         findDataMap.put("tc", repository.getTotalCount());
 
         return findDataMap;
-    }*/
+    }
 
 
     // 게시물 전체 조회 요청 중간 처리 with searching
@@ -81,7 +81,7 @@ public class BoardService {
 
 
         findDataMap.put("bList", boardList);
-        findDataMap.put("tc", repository.getTotalCount(search));
+        findDataMap.put("tc", repository.getTotalCount2(search));
 
         return findDataMap;
     }
