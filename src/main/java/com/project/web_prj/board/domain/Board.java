@@ -23,6 +23,7 @@ public class Board { // 보통 실무에서는 테이블명이랑 똑같이 만�
     // 커스텀 데이터 필드
     private String shortTitle; // 줄임 제목
     private String prettierDate; // 변경된 날짜 포맷
+    private boolean newArticle; // 신규 게시물 여부
 
 
     public Board(ResultSet rs) throws SQLException {

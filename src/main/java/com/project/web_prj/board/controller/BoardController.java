@@ -31,7 +31,7 @@ public class BoardController {
 
     // 게시물 목록 요청
     @GetMapping("/list") // http://localhost:8183/board/list
-    public String list(Search search, Model model) {
+    public String list(@ModelAttribute Search search, Model model) {
         log.info("controller request /board/list GET!! -{}", search);
 
 

@@ -87,6 +87,28 @@
             color: #fff !important; 
         }
 
+        /* 검색창 */
+        .board-list .top-section {
+            display: flex;
+            justify-content: space-between;
+        }
+        .board-list .top-section .search {
+            flex: 4;
+        }
+        .board-list .top-section .amount {
+            flex: 4;
+        }
+        .board-list .top-section .search form {
+            display: flex;
+        }
+        .board-list .top-section .search form #search-type {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .board-list .top-section .search form input[name=keyword] {
+            flex: 3;
+        }
+
     </style>
 
 
@@ -127,7 +149,7 @@
                             <option value="tc">제목+내용</option>
                         </select>
 
-                        <input class="form-control" type="text" name="keyword">
+                        <input class="form-control" type="text" name="keyword" value="${search.keyword}">
 
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-search"></i>
@@ -138,9 +160,9 @@
 
                 <!-- 목록 개수별 보기 영역 -->
                 <ul class="amount">
-                    <li><a class="btn btn-danger" href="/board/list?amount=10">10</a></li>
-                    <li><a class="btn btn-danger" href="/board/list?amount=20">20</a></li>
-                    <li><a class="btn btn-danger" href="/board/list?amount=30">30</a></li>                
+                    <li><a class="btn btn-danger" href="/board/list?amount=10&type=${search.type}&keyword=${search.keyword}">10</a></li>
+                    <li><a class="btn btn-danger" href="/board/list?amount=20&type=${search.type}&keyword=${search.keyword}">20</a></li>
+                    <li><a class="btn btn-danger" href="/board/list?amount=30&type=${search.type}&keyword=${search.keyword}">30</a></li>                
                 </ul>
             </div>
 
@@ -159,7 +181,12 @@
                     <tr>
                         <td>${b.boardNo}</td>
                         <td>${b.writer}</td>
-                        <td title="${b.title}">${b.shortTitle}</td>
+                        <td title="${b.title}">
+                            ${b.shortTitle}
+                            <c:if test="${b.newArticle}">
+                                <span class="badge rounded-pill bg-danger">new</span>
+                            </c:if>
+                        </td>
                         <td>${b.viewCnt}</td>
                         <td>${b.prettierDate}</td>
                     </tr>
@@ -175,17 +202,17 @@
                     <ul class="pagination pagination-lg pagination-custom">
 
                       <c:if test="${pm.prev}">
-                          <li class="page-item"><a class="page-link" href="/board/list?pageNum=${pm.beginPage - 1}&amount=${pm.getPage().getAmount()}">Prev</a></li>
+                          <li class="page-item"><a class="page-link" href="/board/list?pageNum=${pm.beginPage - 1}&amount=${pm.getPage().getAmount()}&type=${search.type}&keyword=${search.keyword}">Prev</a></li>
                       </c:if>  
                     
                                                         <!-- step=1인 경우,, 생략 가능!! -->
                       <c:forEach var="n" begin="${pm.beginPage}" end="${pm.endPage}" step="1"> 
-                          <li data-page-num="${n}" class="page-item"><a class="page-link" href="/board/list?pageNum=${n}&amount=${pm.getPage().getAmount()}">${n}</a></li>
+                          <li data-page-num="${n}" class="page-item"><a class="page-link" href="/board/list?pageNum=${n}&amount=${pm.getPage().getAmount()}&type=${search.type}&keyword=${search.keyword}">${n}</a></li>
                       </c:forEach>
                       
 
                       <c:if test="${pm.next}">
-                          <li class="page-item"><a class="page-link" href="/board/list?pageNum=${pm.endPage + 1}&amount=${pm.getPage().getAmount()}">Next</a></li>
+                          <li class="page-item"><a class="page-link" href="/board/list?pageNum=${pm.endPage + 1}&amount=${pm.getPage().getAmount()}&type=${search.type}&keyword=${search.keyword}">Next</a></li>
                       </c:if>
                     </ul>
                   </nav>
@@ -194,7 +221,7 @@
 
                 <!-- 글쓰기 버튼 영역 -->
                 <div class="btn-write">
-                    <a class="btn btn-outline-danger btn-lg" href="/board/write">글쓰기</a>
+                    <a class="btn btn-outline-danger btn-lg" href="/board/write?pageNum=${pm.endPage + 1}&amount=${pm.getPage().getAmount()}&type=${search.type}&keyword=${search.keyword}">글쓰기</a>
                 </div>
             </div>
 
@@ -207,6 +234,27 @@
     </div>
 
     <script>
+
+        // 굳이 함수 안써도 됐나..?
+        function fixSearchOption(){
+            const $select = document.querySelector('.form-select');
+            // const $input = $select.nextElementSibling;
+
+            const $optionList = $select.children;
+
+            console.log('${search.type}');
+            console.log('${search.keyword}');
+
+
+            for (let option of $optionList) {
+                if ('${search.type}' === option.value) {
+                    option.setAttribute('selected', 'selected');
+                    return;
+                }
+            }
+            
+        }
+
 
         function appendPageAction() {
 
@@ -276,6 +324,7 @@
             alertServerMessage();
             detailRequestEvent();
             appendPageAction();
+            fixSearchOption();
 
         }) ();
     </script>

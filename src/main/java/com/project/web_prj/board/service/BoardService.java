@@ -15,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +92,30 @@ public class BoardService {
         for (Board b : boardList) {
             convertDateFormat(b);
             substringTitle(b);
+            checkNewArticle(b);
+        }
+    }
+
+
+    // 신규 게시물 여부 처리
+    private void checkNewArticle(Board b) {
+        // 게시물의 작성 일자와 현재 시간을 대조
+
+        // 1. 게시물의 작성 일자 가져오기
+        long regDate = b.getRegDate().getTime(); // DATE 타입의 밀리초로 변환해주는 메서드
+
+        // 2. 현재 시간 가져오기 (밀리초)
+        long nowTime = System.currentTimeMillis();
+
+        // 3. 현재 시간 - 작성 시간
+        long diff = nowTime - regDate;
+
+        // 4. 신규 게시물 제한시간
+        long limitTime = 60 * 5 * 1000; // 5분을 초로 변환한 것.
+
+        // 5. 신규 게시물인지 판단
+        if (diff < limitTime) {
+            b.setNewArticle(true);
         }
     }
 
