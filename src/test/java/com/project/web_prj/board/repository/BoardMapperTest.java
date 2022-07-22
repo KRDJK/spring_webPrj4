@@ -100,7 +100,7 @@ class BoardMapperTest {
         Search search = new Search();
         search.setType("title");
         search.setKeyword("30");
-        int totalCount = mapper.getTotalCount(search);
+        int totalCount = mapper.getTotalCount2(search);
 
         System.out.println("totalCount = " + totalCount);
     }
