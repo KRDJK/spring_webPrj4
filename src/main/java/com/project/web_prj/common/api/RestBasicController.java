@@ -39,7 +39,7 @@ public class RestBasicController {
 
 
     // post 요청 처리 : REST 방식에서는 HTML의 form을 활용하는 것이 아니다.
-            // 근데 클라이언트가 웹브라우저가 아니라면?? 그래서 클라이언트가 뭐든간에 JSON 으로 송신한다.
+            // HTML에서야 form이 가능하겠지.. 근데 클라이언트가 웹브라우저가 아니라면?? 그래서 클라이언트가 뭐든간에 JSON 으로 송신한다.
     @PostMapping("/api/join")
     public String joinPost(@RequestBody List<String> info) { // 이러면 List 형태의 JSON을 클라이언트에서 던져줘야 한다.
                                             // 그럼 그걸 다시 여기서 자바 형태로 JSON을 변환한다. 그걸 누가해?? 스프링 내부의 '잭슨' 이라는 라이브러리가 한다.
