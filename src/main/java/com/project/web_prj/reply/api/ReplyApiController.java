@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@RequestMapping("/api/v1/replies") // 음???
+@RequestMapping("/api/v1/replies")
 public class ReplyApiController {
 
     private final ReplyService replyService;
