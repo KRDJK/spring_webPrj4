@@ -33,6 +33,12 @@
         WHERE reply_no = #{replyNo}
     </delete>
 
+    <!--  어떤 게시물에 딸린 댓글 전체 삭제  -->
+    <delete id="removeAll">
+        DELETE FROM tbl_reply
+        WHERE board_no = #{boardNo}
+    </delete>
+
     <!--  댓글 개별조회  -->
     <select id="findOne" resultMap="replyMap">
         SELECT * FROM tbl_reply

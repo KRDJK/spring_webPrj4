@@ -19,6 +19,9 @@ public interface ReplyMapper {
     //댓글 삭제
     boolean remove(Long replyNo);
 
+    //댓글 전체 삭제
+    boolean removeAll(Long boardNo);
+
     //댓글 개별 조회
     Reply findOne(Long replyNo);
 
