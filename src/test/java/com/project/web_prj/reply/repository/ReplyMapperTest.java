@@ -55,4 +55,20 @@ class ReplyMapperTest {
 
         replyList.forEach(System.out::println);
     }
+
+    @Test
+    @DisplayName("댓글 200개를 300번 게시물에 등록해야 한다.")
+    void bulkSaveTest() {
+
+        for (int i = 1; i <= 200; i++) {
+            long bno = 300L;
+
+            Reply reply = new Reply();
+            reply.setBoardNo(bno);
+            reply.setReplyText("댓글" + i);
+            reply.setReplyWriter("메롱이"+ i);
+
+            replyMapper.save(reply);
+        }
+    }
 }

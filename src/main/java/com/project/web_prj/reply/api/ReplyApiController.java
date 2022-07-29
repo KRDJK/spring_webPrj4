@@ -13,6 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Log4j2
 @RequestMapping("/api/v1/replies")
+@CrossOrigin // 외부 접근을 허용하려면 이걸 붙이면 된다.
 public class ReplyApiController {
 
     private final ReplyService replyService;
