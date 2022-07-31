@@ -548,7 +548,7 @@
                 headers: {
                     'content-type': 'application/json'
                 }, 
-                body: json.stringify({
+                body: JSON.stringify({
                     replyText: document.getElementById('modReplyText').value
                 })
             }
@@ -558,7 +558,7 @@
                 .then(res => res.text())
                 .then(msg => {
                     if (msg === 'mod-success') {
-                        // showReplies();
+                        showReplies();
                         alert('댓글 수정 성공!');
                     } else {
                         alert('댓글 수정 실패!');
