@@ -169,6 +169,10 @@
                 console.log(e); // e는 브라우저가 주는 데이터다. 
                                 //이벤트의 종류에 따라 제공하는 정보가 달랐다. 누른 key에 대한 정보는 key 관련 이벤트일때만!!
 
+
+                // 복습 1단계 : 바로 밑의 files 로그와 윗 e 로그가 다른 이유는 파일을 인식하기도 전에 순서상 로그가 먼저 찍혀서 그렇다고 함.. 흠..
+
+
                 const files = e.originalEvent.dataTransfer.files;
                 console.log('drop file data: ', files);
 
@@ -177,7 +181,12 @@
                 // 2. 읽은 파일 데이터를 input[type=file] 태그에 저장
                 const $fileInput = $('#ajax-file');
 
-                $fileInput.prop('files', files); // input의 name이 files이기 때문에 1번째 파라미터에서 맞춰준 것.
+                $fileInput.prop('files', files); // input의 name이 files이기 때문에 1번째 파라미터에서 맞춰준 것..????
+
+                // 복습 2단계 : input 태그가 파일을 받기 위해 type 속성을 file로 갖고 있다면!!
+                //              눈에 보이지 않지만 자동적으로 files 라는 속성을 갖고 있다.
+                //              어떤 파일을 선택해주기 전까진 files 속성값은 공란이며
+                //              비동기 처리를 하려다보니 드랍이 일어난 순간 속성값으로 넣어준 것이다.
 
                 console.log($fileInput); // input 태그를 배열에 담아서 보여준다.. 왜?? JQuery 에서는 q.s All 로 잡아온다.
 
@@ -206,7 +215,7 @@
 
                 fetch('/ajax-upload', reqInfo)
                     .then(res => {
-                        // console.log(res.status);
+                        console.log(res.status);
                         return res.json();
                     })
                     .then(fileNames => {

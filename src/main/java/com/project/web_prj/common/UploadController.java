@@ -117,15 +117,15 @@ public class UploadController {
     @GetMapping("/loadFile")
     @ResponseBody
     // fileName = /2022/08/01/ 반환된 파일명 => 이게 들어온다.
-    public ResponseEntity<byte[]> loadFile(@RequestParam("fileName") String fullPath) { // 클라이언트 사이드에서 파일의 진짜 데이터를 요청하고 있다.
+    public ResponseEntity<byte[]> loadFile(@RequestParam("fileName") String pathAndFileName) { // 클라이언트 사이드에서 파일의 진짜 데이터를 요청하고 있다.
 
-        log.info("/loadFile GET - {}", fullPath);
+        log.info("/loadFile GET - {}", pathAndFileName);
 
 
         // 클라이언트가 요청하는 파일의 찐 바이트 데이터를 갖다줘야 함.
 
         // 1. 요청 파일 찾아서 file 객체로 포장해야 한다.
-        File f = new File(UPLOAD_PATH + fullPath);
+        File f = new File(UPLOAD_PATH + pathAndFileName);
 
         if (!f.exists()) { // 파일을 경로에서 찾아봤는데 존재하지 않는다면 404를 의도해서 띄울 수 있다.
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -138,7 +138,7 @@ public class UploadController {
             // 3. 클라이언트에게 순수 이미지를 응답해야 하므로 MIME TYPE을 응답헤더에 설정한다.
             // ex) image/jpeg, image/png, image/gif 이런 식으로 써서 알려줘야 한다.
             // 확장자를 추출해야 함.
-            String ext = FileUtils.getFileExtension(fullPath);
+            String ext = FileUtils.getFileExtension(pathAndFileName);
             //  "image/" + ext를 해야하는데 jpg면.. jpeg라고 해야한다.. 부들..
             MediaType mediaType = FileUtils.getMediaType(ext);
 
