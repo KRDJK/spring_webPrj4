@@ -13,7 +13,7 @@
 
     <!-- 파일 업로드를 위한 form -->
     <form action="/upload" method="post" enctype="multipart/form-data"> <!-- 내가 지금 보내는건 file 이라고 명시해주는 것. -->
-        <input type="file" name="file">
+        <input type="file" name="file" multiple>
         <button type="submit">업로드</button>
     </form>
     
