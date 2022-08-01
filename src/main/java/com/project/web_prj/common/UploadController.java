@@ -6,15 +6,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @Log4j2
 public class UploadController {
+
+    private static final String UPLOAD_PATH = "E:\\sl_basic\\upload";
+
+
 
     // upload-form.jsp로 포워딩하는 요청
     @GetMapping("/upload-form")
@@ -47,8 +51,8 @@ public class UploadController {
 
             // 서버에 업로드파일 저장
 
-            // 1-1. 업로드 파일 저장 경로
-            String uploadPath = "E:\\sl_basic\\upload"; // 윈도우는 \ (역슬래시) , 리눅스는 / (정슬래시)
+//            // 1-1. 업로드 파일 저장 경로
+//            String uploadPath = "E:\\sl_basic\\upload"; // 윈도우는 \ (역슬래시) , 리눅스는 / (정슬래시)
 
 
             // 1. 세이브파일 객체 생성
@@ -63,10 +67,45 @@ public class UploadController {
             e.printStackTrace();
         }*/
 
-            FileUtils.uploadFile(file, uploadPath);
+            FileUtils.uploadFile(file, UPLOAD_PATH);
         }
 
 
         return "redirect:/upload-form";
     }
+
+
+    // 비동기 요청 파일 업로드 처리
+    @PostMapping("/ajax-upload")
+    @ResponseBody
+    public List<String> ajaxUpload(List<MultipartFile> files) { // JSON 방식이 아니면 그냥 form 태그 활용해서 파라미터 받듯이 받으면 된다.
+
+        log.info("/ajax-upload POST! - {}", files.get(0).getOriginalFilename());
+
+
+        // 클라이언트에게 전송할 파일경로 리스트
+        List<String> fileNames = new ArrayList<>();
+
+
+        // 클라이언트가 전송한 파일 업로드하기
+        for (MultipartFile file : files) {
+
+            String fullPath = FileUtils.uploadFile(file, UPLOAD_PATH);
+
+            fileNames.add(fullPath);
+        }
+
+
+        return fileNames;
+    }
+
+
+    // 파일 데이터 로드 요청 처리
+    @GetMapping("/loadFile")
+    @ResponseBody
+    public void loadFile(@RequestParam("fileName") String fullPath) {
+        log.info("/loadFile GET - {}", fullPath);
+
+    }
+
 }
