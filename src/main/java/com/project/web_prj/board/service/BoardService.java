@@ -30,9 +30,26 @@ public class BoardService {
 
 
     // 게시물 등록 요청 중간 처리
+    @Transactional // 둘 중에 하나라도 작업이 잘 안됐으면 롤백해라
     public boolean saveService(Board board) {
         log.info("save service start - {}", board);
-        return boardMapper.save(board);
+
+        // 게시물 내용 DB에 저장
+        boolean flag = boardMapper.save(board);
+
+
+        List<String> fileNames = board.getFileNames();
+
+        if (fileNames != null && fileNames.size() != 0) {
+
+            for (String fileName : fileNames) {
+                // 첨부파일 내용 DB에 저장
+                boardMapper.addFile(fileName);
+            }
+        }
+
+
+        return flag;
     }
 
 
@@ -129,8 +146,8 @@ public class BoardService {
         // 시간 포맷팅( 표시 형식 변경 ) 처리
         Date date = b.getRegDate();
         SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd a hh:mm");
-                                                                    // a = 오전, 오후 구분
-                                                                    // hh = 0~12시까지만 표기.
+        // a = 오전, 오후 구분
+        // hh = 0~12시까지만 표기.
         b.setPrettierDate(sdf.format(date));
     }
 

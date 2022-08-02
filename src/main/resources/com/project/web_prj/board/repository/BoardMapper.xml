@@ -99,4 +99,16 @@
         WHERE board_no = #{boardNo}
     </select>
 
+
+    <!-- 첨부파일 추가 -->
+    <insert id="addFile">
+
+        <!-- bno를 알려면 일단 게시물이 save 되어야 하는데..? 시퀀스를 활용하니까.. -->
+
+        INSERT INTO file_upload
+            (file_name, bno)
+        VALUES
+            (#{fileName}, seq_tbl_board.currval)
+
+    </insert>
 </mapper>
