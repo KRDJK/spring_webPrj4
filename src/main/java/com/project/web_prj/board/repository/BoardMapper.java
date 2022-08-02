@@ -46,4 +46,8 @@ public interface BoardMapper {
     
     // 파일 첨부 기능 처리
     void addFile(String fileName);
+
+
+    // 게시물에 붙어있는 첨부파일 경로명 전부 조회하기
+    List<String> findFileNames(Long bno);
 }
