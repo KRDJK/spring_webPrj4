@@ -89,8 +89,24 @@
                 <button id="list-btn" type="button" class="btn btn-dark">목록</button>
             </div>
 
-            <!-- 댓글 영역 -->
 
+            <!-- 첨부파일 목록 영역 -->
+            <div class="card-header text-white m-0" style="background: #343A40;">
+                <div class="float-left">첨부파일 (<span id="fileCnt">0</span>)</div>
+            </div>
+            <div id="fileCollapse" class="card">
+                <div id="fileData">
+
+                </div>
+            </div>
+
+            <!-- 파일 첨부 영역
+            <div class="form-group">
+                <ul class="uploaded-list"></ul>
+            </div> -->
+
+
+            <!-- 댓글 영역 -->
             <div id="replies" class="row">
                 <div class="offset-md-1 col-md-10">
                     <!-- 댓글 쓰기 영역 -->
@@ -186,6 +202,68 @@
 
         <%@ include file="../include/footer.jsp" %>
     </div>
+
+
+
+    <!-- 첨부파일 목록 불러오기 관련 script -->
+    <script>
+        function isImgFile(originFileName) {
+            //정규표현식
+            const pattern = /jpg$|gif$|png$/i; // jpg로 끝나거나~ gif로 끝나거나~ png로 끝나면 true를 리턴하라.
+
+            return originFileName.match(pattern); // 패턴하고 매치되면 true다.
+        }
+
+
+        function checkExt(file) {
+
+            let originFileName = file.substring(file.indexOf('_') + 1);
+
+            if (isImgFile(originFileName)) {
+
+                const $img = document.createElement('img');
+                $img.setAttribute('src', '/loadFile?fileName=' + file);
+                $img.setAttribute('alt', originFileName);
+
+                document.getElementById('fileData').appendChild($img);
+            } 
+            else {
+                const $a = document.createElement('a');
+                $a.setAttribute('href', '/loadFile?fileName=' + file);
+
+
+                const $img = document.createElement('img');
+                $img.setAttribute('src', '/img/file_icon.jpg');
+                $img.setAttribute('alt', originFileName);
+
+                $a.appendChild($img);
+                $a.innerHTML += '<span>' + originFileName + '</span>';
+
+
+                document.getElementById('fileData').appendChild($a);
+            }
+        }
+
+
+        function makeFileListDOM(files) {
+
+            for (let file of files) {
+                checkExt(file);
+            }
+        }
+
+
+        // 첨부파일 목록 비동기 요청
+        fetch('/board/file/' + '${b.boardNo}')
+            .then(res => res.json())
+            .then(files => {
+                console.log(files);
+                makeFileListDOM(files);
+
+            }).catch(err => {
+                alert('첨부파일 목록을 불러오기 위한 서버와의 통신에 실패하였습니다.');
+            });
+    </script>
 
 
     <!-- 게시글 상세보기 관련 script -->
@@ -408,7 +486,7 @@
             let tag = '';
 
             if (replyList === null || replyList.length === 0) { // null 검증은 같이 해주는게 좋다.
-                
+
                 tag = "<div id='replyContent' class='card-body'>댓글이 아직 없습니다.ㅠㅠ</div>";
 
             } else {
