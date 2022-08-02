@@ -108,6 +108,28 @@
 
 
                     $('.uploaded-list').append($img);
+                } 
+
+
+                else { // 파일이 이미지가 아니라면~~ 다운로드 링크를 생성해줄 것이다.
+
+                    const $a = document.createElement('a');
+                    $a.setAttribute('href', '/loadFile?fileName=' + fileName);
+
+
+                    const $img = document.createElement('img');
+                    $img.classList.add('img-sizing');
+
+                    $img.setAttribute('src', '/img/file_icon.jpg'); // 이미지 파일이 아니면 처리할 이미지를 미리 넣어놨었다 ㅇㅇ
+
+                    $img.setAttribute('alt', originFileName); // 원본 파일명만을 떼어낸 것.
+
+                    $a.append($img);
+                    $a.innerHTML += '<span>' + originFileName + '</span>';
+
+
+                    $('.uploaded-list').append($a);
+
                 }
 
             }

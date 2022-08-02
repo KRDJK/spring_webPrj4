@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,7 +134,7 @@ public class UploadController {
 
         
         // 2. 해당 파일을 InputStream을 통해 불러온다.
-        try (FileInputStream fis = new FileInputStream(f)) { // 서버의 이미지 저장소에서 끌어오자. 내보내줘야 하니까
+        try (FileInputStream fis = new FileInputStream(f)) { // 서버의 이미지 저장소에서 끌어오자. 내보내줘야 하니까!!!
 
             // 3. 클라이언트에게 순수 이미지를 응답해야 하므로 MIME TYPE을 응답헤더에 설정한다.
             // ex) image/jpeg, image/png, image/gif 이런 식으로 써서 알려줘야 한다.
@@ -150,6 +151,22 @@ public class UploadController {
 
             if (mediaType != null) { // 이미지라면
                 headers.setContentType(mediaType); // 'content-type' : 'image/jpeg 이런 식으로 헤더에 세팅해줌.
+            }
+
+            else { // 이미지가 아니라면 응답 헤더에 이게 다운로드 가능한 파일이라는 표시를 해줘야 한다.
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM); // application / octet_stream
+
+                // 파일명을 원래대로 복구 (앞에 뗄거 다 떼고 상어.jpg 이런 식으로!)
+                pathAndFileName = pathAndFileName.substring(pathAndFileName.indexOf("_") + 1);
+
+
+                // 파일명이 한글인 경우 인코딩 재설정
+                String encoding = new String(
+                        pathAndFileName.getBytes("UTF-8"), "ISO-8859-1");
+
+
+                // 헤더에 위 내용을 추가
+                headers.add("Content-Disposition", "attachment; fileName=\"" + encoding +"\"");
             }
 
 
