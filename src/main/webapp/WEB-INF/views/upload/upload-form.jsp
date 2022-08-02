@@ -158,9 +158,14 @@
 
 
             // drop 이벤트
-            $dropBox.on('drop', e => {
-                e.preventDefault();
+            $dropBox.on('drop', e => { // drop 이벤트가 발생했을 때의 정보를 e에 다 담아준다.
+                
+                e.preventDefault(); 
+                // 새 탭에 이미지 파일이 크게 열려버리는걸 방지. 
+                // 또는 이미지가 아니라 파일이라면 다운로드나 브라우저에 바로 파일이 연결되는 등의 기본 행위를 막아줌.
+                
                 console.log('드롭 이벤트 작동!');
+
 
 
                 // 드롭된 파일 정보를 서버로 전송해야 함.
@@ -180,6 +185,7 @@
 
                 // 2. 읽은 파일 데이터를 input[type=file] 태그에 저장
                 const $fileInput = $('#ajax-file');
+                console.log($fileInput); // 여기서도 그냥 잡히네..????
 
                 $fileInput.prop('files', files); // input의 name이 files이기 때문에 1번째 파라미터에서 맞춰준 것..????
 
@@ -193,7 +199,7 @@
 
 
                 // 3. 파일 데이터를 비동기 전송하기 위해서는 FormData 객체가 필요하다.
-                const formData = new FormData();
+                const formData = new FormData(); // form 태그를 사용하는 것처럼 수동으로 만든 것이다.
 
 
 

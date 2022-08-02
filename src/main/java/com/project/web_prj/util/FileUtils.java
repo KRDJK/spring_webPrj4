@@ -68,7 +68,7 @@ public class FileUtils {
 
 
         try {
-            file.transferTo(f);
+            file.transferTo(f); // 실제 저 파일을 등록 (업로딩) 시켜주는 메서드.
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -86,7 +86,7 @@ public class UploadController {
     // 비동기 요청 파일 업로드 처리
     @PostMapping("/ajax-upload")
     @ResponseBody
-    public List<String> ajaxUpload(List<MultipartFile> files) { // JSON 방식이 아니면 그냥 form 태그 활용해서 파라미터 받듯이 받으면 된다.
+    public ResponseEntity<List<String>> ajaxUpload(List<MultipartFile> files) { // JSON 방식이 아니면 그냥 form 태그 활용해서 파라미터 받듯이 받으면 된다.
 
         log.info("/ajax-upload POST! - {}", files.get(0).getOriginalFilename());
 
@@ -104,7 +104,7 @@ public class UploadController {
         }
 
 
-        return fileNames;
+        return new ResponseEntity<>(fileNames, HttpStatus.OK);
     }
 
 
@@ -133,13 +133,15 @@ public class UploadController {
 
         
         // 2. 해당 파일을 InputStream을 통해 불러온다.
-        try (FileInputStream fis = new FileInputStream(f)) {
+        try (FileInputStream fis = new FileInputStream(f)) { // 서버의 이미지 저장소에서 끌어오자. 내보내줘야 하니까
 
             // 3. 클라이언트에게 순수 이미지를 응답해야 하므로 MIME TYPE을 응답헤더에 설정한다.
             // ex) image/jpeg, image/png, image/gif 이런 식으로 써서 알려줘야 한다.
             // 확장자를 추출해야 함.
+
             String ext = FileUtils.getFileExtension(pathAndFileName);
-            //  "image/" + ext를 해야하는데 jpg면.. jpeg라고 해야한다.. 부들..
+
+            //  "image/" + ext(jpeg, png, gif 등의 이미지 확장자)를 응답 헤더에 세팅해야 하는데 jpg면.. jpeg라고 해야한다.. 부들..
             MediaType mediaType = FileUtils.getMediaType(ext);
 
 
@@ -147,7 +149,7 @@ public class UploadController {
             HttpHeaders headers = new HttpHeaders();
 
             if (mediaType != null) { // 이미지라면
-                headers.setContentType(mediaType);
+                headers.setContentType(mediaType); // 'content-type' : 'image/jpeg 이런 식으로 헤더에 세팅해줌.
             }
 
 
