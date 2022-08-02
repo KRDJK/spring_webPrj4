@@ -40,7 +40,7 @@ public class BoardService {
 
         List<String> fileNames = board.getFileNames();
 
-        if (fileNames != null && fileNames.size() != 0) {
+        if (fileNames != null && fileNames.size() > 0) {
 
             for (String fileName : fileNames) {
                 // 첨부파일 내용 DB에 저장

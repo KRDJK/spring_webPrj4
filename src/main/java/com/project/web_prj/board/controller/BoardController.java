@@ -10,10 +10,12 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -77,8 +79,26 @@ public class BoardController {
 
     // 게시물 작성 후 등록 요청
     @PostMapping("/write")
-    public String write(Board board, RedirectAttributes ra) { // @RequestBody <- 테스트 할 때만 붙이고 끝났으면 떼라.
+    public String write(Board board,
+                        @RequestParam("files") List<MultipartFile> fileList,
+                        RedirectAttributes ra) { // @RequestBody <- 테스트 할 때만 붙이고 끝났으면 떼라.
         log.info("controller request /board/write POST! - {}", board);
+
+
+        /*if (fileList != null) {
+            List<String> fileNames = new ArrayList<>();
+
+            for (MultipartFile file : fileList) {
+                log.info("attachmented file-name: {}", file.getOriginalFilename());
+
+
+                fileNames.add(file.getOriginalFilename());
+            }
+
+            // board 객체에 파일명 추가
+            board.setFileNames(fileNames);
+        }*/
+
 
         boolean flag = boardService.saveService(board); // 테스트하면서 DB로 보내는 것도 잘 등록되는 것을 확인했다!
 
@@ -93,7 +113,7 @@ public class BoardController {
         // 왜 리다이렉트를 해야할까?? 글 작성 이후 /board/list 요청에 따른 비즈니스 로직을 컨트롤러가 다시 수행하여 출력해야 하기 때문에!!!
     }
 
-    
+
     // 게시글 수정 화면 요청
     @GetMapping("/modify")
     public String modify(Long boardNo, Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -116,11 +136,10 @@ public class BoardController {
         boolean flag = boardService.modifyService(board);
 
 
-
         return flag ? "redirect:/board/content/" + board.getBoardNo() : "redirect:/";
     }
-    
-    
+
+
     // 게시글 삭제 요청
     @GetMapping("/delete")
     public String delete(Long boardNo) {

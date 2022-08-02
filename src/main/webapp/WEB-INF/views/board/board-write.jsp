@@ -41,7 +41,7 @@
 
         <div class="write-container">
 
-            <form id="write-form" action="/board/write" method="post" autocomplete="off">
+            <form id="write-form" action="/board/write" method="post" autocomplete="off" enctype="multipart/form-data">
 
                 <div class="mb-3">
                     <!-- 라벨로 감싸면 for 속성을 쓰지 않아도 되지만 감싸지 않았기 때문에 input 태그의 id 값이랑 일치 시켜야 한다. -->
@@ -159,6 +159,20 @@
 
                 // 원본 파일명 추출
                 let originFileName = fileName.substring(fileName.indexOf('_') + 1); // 언더바 다음 글자부터 끝까지 잘라라.
+
+
+
+                // hidden input을 만들어서 변환 파일명을 서버로 넘김 : 여러개 input 태그가 동일한 name을 가지고 있다면 리스트에 담아준다.
+                    // 반복문을 돌면서 checkExtType(fileName) 함수가 돌고 있기 때문에 가능하다.
+                const $hiddenInput = document.createElement('input');
+                $hiddenInput.setAttribute('type', 'hidden');
+                $hiddenInput.setAttribute('name', 'fileNames');
+                $hiddenInput.setAttribute('value', fileName);
+
+
+                $('#write-form').append($hiddenInput);
+
+
 
 
                 // 확장자 추출 후 이미지인지까지 확인

@@ -103,7 +103,7 @@
     <!-- 첨부파일 추가 -->
     <insert id="addFile">
 
-        <!-- bno를 알려면 일단 게시물이 save 되어야 하는데..? 시퀀스를 활용하니까.. -->
+        <!-- bno를 알려면 일단 게시물이 save 되어야 하는데..? 시퀀스를 활용하니까.. 그래서 .currval 활용 -->
 
         INSERT INTO file_upload
             (file_name, bno)
