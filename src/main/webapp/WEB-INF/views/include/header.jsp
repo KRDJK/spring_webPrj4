@@ -22,11 +22,24 @@
         </a>
         <ul>
             <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>  
+            <li><a href="#">About</a></li>
             <li><a href="/board/list">Board</a></li>
             <li><a href="#">Contact</a></li>
-            <li><a href="/member/sign-up">SignUp</a></li>
-            <li><a href="/member/sign-in">SignIn</a></li>
+
+
+            <%-- <c:if test="${requestScope.b.bardNo}"> --%>
+                <!-- 아래와 같이 쓰면 session.getAttribute("loginUser")와 같은 코드다. -->
+            <%-- <c:if test="${sessionScope.loginUser == null}" > --%>
+                <!-- request 에는 없고 session에만 있다면 앞에 sessionScope. 구문을 생략할 수 있다. -->
+            <c:if test="${loginUser == null}" >
+                <li><a href="/member/sign-up">Sign Up</a></li>
+                <li><a href="/member/sign-in">Sign In</a></li>
+            </c:if>
+
+            <c:if test="${loginUser != null}">
+                <li><a href="#">My Page</a></li>
+                <li><a href="/member/sign-out">Sign Out</a></li>
+            </c:if>
         </ul>
     </nav>
 

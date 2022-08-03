@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public class MemberService {
 
 
     // 로그인 처리
-    public LoginFlag login(LoginDTO inputData) {
+    public LoginFlag login(LoginDTO inputData, HttpSession session) {
 
         // 회원가입 여부 확인
         Member foundMember = memberMapper.findUser(inputData.getAccount());
@@ -70,6 +71,12 @@ public class MemberService {
             // id를 잘 찾았으면 비번 검증
             if (encoder.matches(inputData.getPassword(), foundMember.getPassword())) {
                 // 로그인이 성공한 경우
+
+                // 세션에 사용자 정보기록 저장
+                session.setAttribute("loginUser", foundMember);
+                // 세션 타임아웃(수명) 설정
+                session.setMaxInactiveInterval(60 * 60); // 기본값이 30분이지만, 1시간으로 임의 설정하기
+
                 return SUCCESS;
             } else {
                 // 비번이 틀린 경우

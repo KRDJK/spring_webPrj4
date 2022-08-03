@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Controller
 @Log4j2
 @RequiredArgsConstructor
@@ -82,18 +85,26 @@ public class MemberController {
 
     // 실질적 로그인 요청 처리
     @PostMapping("/sign-in")
-    public String singIn(LoginDTO inputData, RedirectAttributes ra) {
+    public String singIn(LoginDTO inputData,
+                         RedirectAttributes ra,
+//                         HttpServletRequest request,
+                         HttpSession session // 스프링에서 바로 세션 정보를 활용할 수 있게 도와준다. 세션 정보 객체임.
+    ) {
         // 체크박스 클릭을 안하면 autoLogin 필드의 기본값인 false로 처리하고, on으로 넘어온다면
         // 자바스크립트의 truthy 개념을 적용해서 엇? 뭐가 값이 있네?? 그럼 true! 그래서 true로 넘어온다.
 
         log.info("/member/sign-in POST - {}", inputData);
+//        log.info("session timeout : {}", session.getMaxInactiveInterval()); // 기본 수명이 30분이다.
+
 
         // 로그인 서비스 호출
-        LoginFlag flag = memberService.login(inputData);
+        LoginFlag flag = memberService.login(inputData, session);
 
 
         if (flag == LoginFlag.SUCCESS) {
             log.info("login success");
+//            HttpSession session = request.getSession();
+//            session.setAttribute("loginUser", );
             return "redirect:/";
         }
 
