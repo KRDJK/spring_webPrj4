@@ -19,6 +19,9 @@ class MemberMapperTest {
     @Autowired
     MemberMapper mapper;
 
+    @Autowired
+    BCryptPasswordEncoder encoder;
+
 
     @Test
     @DisplayName("회원가입에 성공해야 한다.")
@@ -133,5 +136,43 @@ class MemberMapperTest {
 
         //then
         assertEquals(1, flagNumber);
+    }
+
+
+
+    @Test
+    @DisplayName("로그인을 검증해야 한다.")
+    void signInTest() {
+
+        // 로그인 시도 중인 계정명, 패스워드 세팅
+        String inputId = "kdf556";
+        String inputPw = "ehdwls12!";
+
+
+        // 1. 로그인 시도한 계정명으로 회원정보 조회
+        Member foundMember = mapper.findUser(inputId);
+
+        // 2. 회원가입 여부를 먼저 확인한다.
+        if (foundMember != null) {
+
+            // 3. 패스워드를 대조한다.
+            //    실제 회원의 비밀번호를 가져온다.
+            String dbPw = foundMember.getPassword(); // 암호화되어 들어있음.
+
+
+            // 4. 암호화된 패스워드를 디코딩하여 비교
+            if (encoder.matches(inputPw, dbPw)) { // '==' 비교는 주소값이 같냐고 묻는거라 안된다.
+                // 자체적으로 내부에서 디코딩을 해서 비교한 후 true, false 만 반환해주는 메서드가 있다고 한다.
+
+//                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//                매번 new~~ 해가면서 객체 생성 안하려고 스프링 시큐리티에 빈 등록을 해버렸다.
+
+                System.out.println("로그인 성공!!");
+            } else {
+                System.out.println("비밀번호가 틀렸습니다.");
+            }
+        } else {
+            System.out.println("존재하지 않는 아이디입니다.");
+        }
     }
 }

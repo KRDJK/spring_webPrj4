@@ -1,6 +1,7 @@
 package com.project.web_prj.member.service;
 
 import com.project.web_prj.member.domain.Member;
+import com.project.web_prj.member.dto.LoginDTO;
 import com.project.web_prj.member.repository.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -10,12 +11,15 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.project.web_prj.member.service.LoginFlag.*;
+
 @Service
 @Log4j2
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberMapper memberMapper;
+    private final BCryptPasswordEncoder encoder;
 
 
 
@@ -23,7 +27,9 @@ public class MemberService {
     public boolean signUp(Member member) {
 
         // 비밀번호 인코딩
-        member.setPassword(new BCryptPasswordEncoder().encode(member.getPassword()));
+//        member.setPassword(new BCryptPasswordEncoder().encode(member.getPassword()));
+        member.setPassword(encoder.encode(member.getPassword()));
+
 
         return memberMapper.register(member);
     }
@@ -50,5 +56,28 @@ public class MemberService {
     // 개별 회원 정보 조회 중간 처리
     public Member getMember(String account) {
         return memberMapper.findUser(account);
+    }
+
+
+
+    // 로그인 처리
+    public LoginFlag login(LoginDTO inputData) {
+
+        // 회원가입 여부 확인
+        Member foundMember = memberMapper.findUser(inputData.getAccount());
+
+        if (foundMember != null) {
+            // id를 잘 찾았으면 비번 검증
+            if (encoder.matches(inputData.getPassword(), foundMember.getPassword())) {
+                // 로그인이 성공한 경우
+                return SUCCESS;
+            } else {
+                // 비번이 틀린 경우
+                return NO_PW;
+            }
+        } else {
+            // 아이디가 없는 경우
+            return NO_ACC;
+        }
     }
 }
