@@ -18,15 +18,26 @@
     </insert>
 
 
-<!--    중복 체크 기능-->
-    <select id="isDuplicate">
-
+<!--    중복 체크 기능 (아이디, 이메일) -->
+    <select id="isDuplicate" resultType="int">
+        SELECT COUNT(*)
+        FROM tbl_member
+<!--        Map을 보낸다면 맵의 키를 보내면 된다. map.put ("type", "account") -->
+        <if test="type=='account'">
+        WHERE account = #{value}
+        </if>
+        <if test="type=='email'">
+        WHERE email = #{value}
+        </if>
     </select>
 
 
 <!--    회원 조회 기능-->
-    <select id="findUser">
-
+    <select id="findUser" resultMap="memberMap">
+<!--        실무에서는 *을 거의 안쓴다. 실제로는 컬럼이 엄청 많기 때문에.. 불필요한 자료는 뽑지 않는다. -->
+        SELECT *
+        FROM tbl_member
+        WHERE account = #{account}
     </select>
 
 </mapper>
