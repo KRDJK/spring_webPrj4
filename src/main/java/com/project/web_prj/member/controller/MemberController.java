@@ -111,4 +111,25 @@ public class MemberController {
         ra.addFlashAttribute("loginMsg", flag); // NO_ACC 또는 NO_PW 상수값이 flag에 들어있을 거임.
         return "redirect:/member/sign-in";
     }
-}
+
+
+
+    // 로그아웃 요청 처리
+    @GetMapping("/sign-out")
+    public String signOut(HttpSession session) {
+
+        if (session.getAttribute("loginUser") != null) {
+            // 1. 세션에서 정보를 삭제한다.
+            session.removeAttribute("loginUser");
+
+
+            // 2. 세션을 무효화한다. 타임아웃까지 삭제해야 함.
+            session.invalidate();
+            return "redirect:/";
+        }
+
+        // 로그인도 안해놓고 이런 요청 보내면 로그인 화면으로 보낼 것.
+        return "redirect:/member/sign-in";
+    }
+
+} // end class

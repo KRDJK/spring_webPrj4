@@ -23,6 +23,8 @@ public class HomeController {
 
         // 로그인이 된 상태인지 아닌지 메인화면에서 확인해야 하므로 세션을 찾아보자.
         // 브라우저가 꺼지기 전에는 정보가 유지되므로 어디서든 가능하다.
+
+
         /*Member loginUser = (Member) session.getAttribute("loginUser");
         if (loginUser == null) {
             model.addAttribute("login", false);

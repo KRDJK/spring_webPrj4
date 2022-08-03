@@ -9,7 +9,11 @@
                 <img src="/img/logo.png" alt="로고이미지">
             </a>
         </h1>
-        <h2 class="intro-text">Welcome</h2>
+        <h2 class="intro-text">Welcome
+            <c:if test="${loginUser != null}">
+                ${loginUser.name}님 Hello!!
+            </c:if>
+        </h2>
         <a href="#" class="menu-open">
             <span class="menu-txt">MENU</span>
             <span class="lnr lnr-menu"></span>
@@ -27,10 +31,12 @@
             <li><a href="#">Contact</a></li>
 
 
+            <!-- 자바코드 주석은 일반 html 주석으로 써서는 안된다. -->
             <%-- <c:if test="${requestScope.b.bardNo}"> --%>
                 <!-- 아래와 같이 쓰면 session.getAttribute("loginUser")와 같은 코드다. -->
             <%-- <c:if test="${sessionScope.loginUser == null}" > --%>
                 <!-- request 에는 없고 session에만 있다면 앞에 sessionScope. 구문을 생략할 수 있다. -->
+
             <c:if test="${loginUser == null}" >
                 <li><a href="/member/sign-up">Sign Up</a></li>
                 <li><a href="/member/sign-in">Sign In</a></li>

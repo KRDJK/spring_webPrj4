@@ -122,5 +122,10 @@
             alert('비밀번호가 틀렸습니다.');
         }
 
+        const warning = '${warningMsg}'
+        if (warning === 'forbidden') {
+            alert('로그인이 필요한 서비스입니다.');
+        }
+
     </script>
 </body>
