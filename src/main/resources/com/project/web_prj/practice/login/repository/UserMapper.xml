@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.web_prj.practice.login.repository.UserMapper">
+    <resultMap id="userMap" type="com.project.web_prj.practice.login.domain.User">
+        <result property="regDate" column="reg_date"/>
+        <result property="id" column="account"/>
+    </resultMap>
+
+
+    <insert id="register">
+        INSERT INTO prac_user
+            (account, password, name, email)
+        VALUES
+            (#{id}, #{password}, #{name}, #{email})
+    </insert>
+
+
+    <select id="isDuplicate" resultType="int">
+        SELECT COUNT(*)
+        FROM prac_user
+        <if test="type=='id'">
+            WHERE account = #{value}
+        </if>
+        <if test="type=='email'">
+            WHERE email = #{value}
+        </if>
+    </select>
+
+    <select id="findUser" resultMap="userMap">
+        SELECT *
+        FROM prac_user
+        WHERE account = #{id}
+    </select>
+</mapper>
