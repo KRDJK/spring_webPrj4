@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.web_prj.member.repository.MemberMapper">
+
+    <resultMap id="memberMap" type="com.project.web_prj.member.domain.Member">
+        <result column="reg_date" property="regDate" />
+    </resultMap>
+
+<!--    회원 가입 기능-->
+    <insert id="register">
+        INSERT INTO tbl_member
+            (account, password, name, email, auth)
+        VALUES
+            (#{account}, #{password}, #{name}, #{email}, #{auth})
+    </insert>
+
+
+<!--    중복 체크 기능-->
+    <select id="isDuplicate">
+
+    </select>
+
+
+<!--    회원 조회 기능-->
+    <select id="findUser">
+
+    </select>
+
+</mapper>
