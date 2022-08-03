@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,6 +94,7 @@ public class MemberController {
     // 실질적 로그인 요청 처리
     @PostMapping("/sign-in")
     public String singIn(LoginDTO inputData,
+                         Model model,
                          RedirectAttributes ra,
 //                         HttpServletRequest request,
                          HttpSession session // 스프링에서 바로 세션 정보를 활용할 수 있게 도와준다. 세션 정보 객체임.
@@ -116,8 +118,9 @@ public class MemberController {
             return "redirect:" + redirectURI;
         }
 
-        ra.addFlashAttribute("loginMsg", flag); // NO_ACC 또는 NO_PW 상수값이 flag에 들어있을 거임.
-        return "redirect:/member/sign-in";
+        // 틀렸을 때 리다이렉팅이 되어버리면 session.referer 정보가 날아가기 때문에 model에 담아 포워딩하는 식으로 바꿨다.
+        model.addAttribute("loginMsg", flag); // NO_ACC 또는 NO_PW 상수값이 flag에 들어있을 거임.
+        return "/member/sign-in";
     }
 
 
