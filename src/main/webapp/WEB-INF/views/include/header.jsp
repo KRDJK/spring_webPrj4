@@ -25,8 +25,8 @@
             <li><a href="#">About</a></li>  
             <li><a href="/board/list">Board</a></li>
             <li><a href="#">Contact</a></li>
-            <li><a href="#">News</a></li>
-            <li><a href="#">Favorite</a></li>
+            <li><a href="/member/sign-up">SignUp</a></li>
+            <li><a href="/member.sign-in">SignIn</a></li>
         </ul>
     </nav>
 
