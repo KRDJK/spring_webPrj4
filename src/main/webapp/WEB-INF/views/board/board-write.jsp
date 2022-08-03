@@ -47,7 +47,7 @@
                     <!-- 라벨로 감싸면 for 속성을 쓰지 않아도 되지만 감싸지 않았기 때문에 input 태그의 id 값이랑 일치 시켜야 한다. -->
                     <label for="writer-input" class="form-label">작성자</label>
                     <input type="text" class="form-control" id="writer-input" placeholder="이름" name="writer"
-                        maxlength="20" disabled value="${loginUser.name}">
+                        maxlength="20" readonly value="${loginUser.name}">
                 </div>
                 <div class="mb-3">
                     <label for="title-input" class="form-label">글제목</label>
