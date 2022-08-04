@@ -700,7 +700,7 @@
             // console.log('댓글 내용:', replyText);
 
             // 2. 모달에 해당 댓글 내용을 배치한다.
-            document.getElementById('modReplyText').textContent = replyText;
+            document.getElementById('modReplyText').value = replyText;
 
 
             // 3. 모달을 띄울 때 다음 작업 (수정완료처리)을 위해 댓글 번호를 모달에 달아두자.
