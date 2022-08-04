@@ -119,4 +119,17 @@
         FROM file_upload
         WHERE bno = #{bno}
     </select>
+
+<!--    조회할 컬럼이 여러개지만 필드명과 컬럼명이 모두 같기 때문에 resultMap을 쓰지 않고 resultType에서 해당 경로를 연결해주면 사용 가능.-->
+    <select id="findMemberByBoardNo" resultType="com.project.web_prj.board.dto.ValidateMemberDTO">
+
+        SELECT account, auth
+        FROM tbl_member
+        WHERE account = (
+                            SELECT account
+                            FROM tbl_board
+                            WHERE board_no = #{boardNo}
+                        )
+
+    </select>
 </mapper>

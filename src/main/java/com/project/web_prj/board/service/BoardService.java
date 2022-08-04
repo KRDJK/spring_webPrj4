@@ -1,6 +1,7 @@
 package com.project.web_prj.board.service;
 
 import com.project.web_prj.board.domain.Board;
+import com.project.web_prj.board.dto.ValidateMemberDTO;
 import com.project.web_prj.board.repository.BoardMapper;
 import com.project.web_prj.common.paging.Page;
 import com.project.web_prj.common.search.Search;
@@ -229,5 +230,11 @@ public class BoardService {
     public List<String> getFiles(Long bno) {
 
         return boardMapper.findFileNames(bno);
+    }
+
+
+
+    public ValidateMemberDTO getMember(Long boardNo) {
+        return boardMapper.findMemberByBoardNo(boardNo);
     }
 }

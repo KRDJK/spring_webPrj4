@@ -32,7 +32,7 @@ public class MemberController {
         log.info("/member/sign-up GET! - forwarding to sign-up.jsp");
         // 스프링 시큐리티를 쓰는 순간 지 멋대로 로그인 화면을 만들어준다.
         // 아이디는 기본값이 user
-        // 비밀번호는 로그에 나온다. Using generated security password: 6153ab33-e005-466c-b6d6-2790b8a13000
+        // 비밀번호는 로그에 나온다(서버 킬 때마다 다름). Using generated security password: 6153ab33-e005-466c-b6d6-2790b8a13000
         // This generated password is for development use only. Your security configuration must be updated before running your application in production.
         // 개발 단계에서만 쓰라는 뜻이다.
 

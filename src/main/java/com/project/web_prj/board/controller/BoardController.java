@@ -139,6 +139,9 @@ public class BoardController {
 
         model.addAttribute("board", board);
 
+        // 22.08.04 이 모델에 넣은 board가 인터셉트에서 postHandle()의 매개변수인 ModelAndView에 들어간다.
+        model.addAttribute("validate", boardService.getMember(boardNo));
+
         return "board/board-modify";
     }
 
@@ -157,12 +160,25 @@ public class BoardController {
 
     // 게시글 삭제 요청
     @GetMapping("/delete")
-    public String delete(Long boardNo) {
+    public String delete(@ModelAttribute("boardNo") Long boardNo, Model model, HttpServletRequest request, HttpServletResponse response) {
         log.info("controller request /board/delete GET! - bno: {}", boardNo);
+
+        model.addAttribute("validate", boardService.getMember(boardNo));
+
+        return "board/process-delete";
+    }
+
+
+
+    // 게시물 삭제 확정 요청
+    @PostMapping("/delete")
+    public String delete(Long boardNo) {
+        log.info("controller request /board/delete POST! - bno: {}", boardNo);
 
         return boardService.removeService(boardNo) ? "redirect:/board/list" : "redirect:/";
     }
-    
+
+
     
     // 특정 게시물에 붙은 첨부파일 경로 리스트를 클라이언트에게 비동기 전송하는 메서드
     @GetMapping("/file/{bno}")
