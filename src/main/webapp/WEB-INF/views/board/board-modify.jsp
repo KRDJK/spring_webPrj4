@@ -57,7 +57,7 @@
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">작성자</label>
                     <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="이름" name="writer"
-                        value="${board.writer}">
+                        value="${board.writer}" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="exampleFormControlInput2" class="form-label">글제목</label>
