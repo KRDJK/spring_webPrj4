@@ -69,6 +69,9 @@ public class FileUtils {
 
         try {
             file.transferTo(f); // 실제 저 파일을 등록 (업로딩) 시켜주는 메서드.
+            // file : 실제 파일 데이터
+            // f : 풀경로 + 파일명
+            // transferTo : 이 파일데이터를 f에서 설정된 경로에 찐으로 생성해줘! 라는 메서드
         } catch (IOException e) {
             e.printStackTrace();
         }

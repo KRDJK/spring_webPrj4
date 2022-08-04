@@ -75,10 +75,11 @@ public class BoardController {
     @GetMapping("/write")
     public String write(HttpSession session, RedirectAttributes ra) {
 
-        if (session.getAttribute("loginUser") == null) {
-            ra.addFlashAttribute("warningMsg", "forbidden");
-            return "redirect:/member/sign-in";
-        }
+        // 인터셉터 학습 이후 필요없어졌음.
+//        if (session.getAttribute("loginUser") == null) {
+//            ra.addFlashAttribute("warningMsg", "forbidden");
+//            return "redirect:/member/sign-in";
+//        }
 
 
         log.info("controller request /board/write GET!!");

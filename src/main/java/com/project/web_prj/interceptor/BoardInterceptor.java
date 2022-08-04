@@ -37,7 +37,7 @@ public class BoardInterceptor implements HandlerInterceptor {
 
 //            dispatcher.forward(request, response);
 
-            response.sendRedirect("/member/sign-in");
+            response.sendRedirect("/member/sign-in?message=no-login");
 
             return false;
         }
