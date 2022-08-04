@@ -5,6 +5,7 @@ import com.project.web_prj.board.service.BoardService;
 import com.project.web_prj.common.paging.Page;
 import com.project.web_prj.common.paging.PageMaker;
 import com.project.web_prj.common.search.Search;
+import com.project.web_prj.util.LoginUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -91,6 +92,7 @@ public class BoardController {
     // 게시물 작성 후 등록 요청
     @PostMapping("/write")
     public String write(Board board,
+                        HttpSession session,
                         @RequestParam("files") List<MultipartFile> fileList,
                         RedirectAttributes ra) { // @RequestBody <- 테스트 할 때만 붙이고 끝났으면 떼라.
         log.info("controller request /board/write POST! - {}", board);
@@ -110,6 +112,8 @@ public class BoardController {
             board.setFileNames(fileNames);
         }*/
 
+        // 22.08.04 현재 로그인 사용자 계정명 추가
+        board.setAccount(LoginUtils.getCurrentMemberAccount(session));
 
         boolean flag = boardService.saveService(board); // 테스트하면서 DB로 보내는 것도 잘 등록되는 것을 확인했다!
 

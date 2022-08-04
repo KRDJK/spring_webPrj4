@@ -19,6 +19,7 @@ public class Board { // 보통 실무에서는 테이블명이랑 똑같이 만�
     private String content;
     private Long viewCnt;
     private Date regDate; // java.util에 있는걸로!
+    private String account; // 22.08.04 테이블 컬럼 추가에 따른 필드 추가
 
 
     // 커스텀 데이터 필드

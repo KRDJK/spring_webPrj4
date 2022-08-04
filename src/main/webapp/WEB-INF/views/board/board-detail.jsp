@@ -84,10 +84,11 @@
             </div>
 
             <div class="btn-group btn-group-lg custom-btn-group" role="group">
-                
-                <button id="mod-btn" type="button" class="btn btn-warning">수정</button>
-                <button id="del-btn" type="button" class="btn btn-danger">삭제</button>
 
+                <c:if test="${loginUser.account == b.account || loginUser.auth == 'ADMIN'}">
+                    <button id="mod-btn" type="button" class="btn btn-warning">수정</button>
+                    <button id="del-btn" type="button" class="btn btn-danger">삭제</button>
+                </c:if>
                 <button id="list-btn" type="button" class="btn btn-dark">목록</button>
             </div>
 
@@ -114,29 +115,35 @@
                     <!-- 댓글 쓰기 영역 -->
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
+
+                            <c:if test="${empty loginUser}">
+                                <a href="/member/sign-in">댓글은 로그인 후 작성 가능합니다.</a>
+                            </c:if>
 
 
-                                <div class="col-md-9">
-                                    <div class="form-group">
-                                        <label for="newReplyText" hidden>댓글 내용</label>
-                                        <textarea rows="3" id="newReplyText" name="replyText" class="form-control"
-                                            placeholder="댓글을 입력해주세요."></textarea>
+                            <c:if test="${not empty loginUser}">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <label for="newReplyText" hidden>댓글 내용</label>
+                                            <textarea rows="3" id="newReplyText" name="replyText" class="form-control"
+                                                placeholder="댓글을 입력해주세요."></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="newReplyWriter" hidden>댓글 작성자</label>
+                                            <!-- 여기서 자바스크립트 조작을 방지하려면 input이 아닌 span 같은걸로 띄워만 주고 넘기지 않는다.
+                                                서버에서 세션을 활용해서 loginUser.name을 꺼내서 setter로 넣어주면 된다. -->
+                                            <input id="newReplyWriter" name="replyWriter" type="text" class="form-control"
+                                                placeholder="작성자 이름" style="margin-bottom: 6px;" value="${loginUser.name}" readonly>
+                                            <button id="replyAddBtn" type="button"
+                                                class="btn btn-dark form-control">등록</button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="newReplyWriter" hidden>댓글 작성자</label>
-                                        <input id="newReplyWriter" name="replyWriter" type="text" class="form-control"
-                                            placeholder="작성자 이름" style="margin-bottom: 6px;">
-                                        <button id="replyAddBtn" type="button"
-                                            class="btn btn-dark form-control">등록</button>
-                                    </div>
-                                </div>
+                            </c:if>
 
-
-
-                            </div>
                         </div>
                     </div> <!-- end reply write -->
 
@@ -270,22 +277,29 @@
 
     <!-- 게시글 상세보기 관련 script -->
     <script>
-        const [$modBtn, $delBtn, $listBtn] = [...document.querySelector('div[role=group]').children];
+        // const [$modBtn, $delBtn, $listBtn] = [...document.querySelector('div[role=group]').children];
 
-        // const $modBtn = document.getElementById('mod-btn');
-        //수정버튼
-        $modBtn.onclick = e => {
-            location.href = '/board/modify?boardNo=${b.boardNo}';
-        };
+        const $modBtn = document.getElementById('mod-btn');
+        const $delBtn = document.getElementById('del-btn');
+        const $listBtn = document.getElementById('list-btn');
 
+        if ($modBtn !== null) {
+            //수정버튼
+            $modBtn.onclick = e => {
+                location.href = '/board/modify?boardNo=${b.boardNo}';
+            };
+        }
 
-        //삭제버튼
-        $delBtn.onclick = e => {
-            if (!confirm('정말 삭제하시겠습니까?')) {
-                return;
-            }
-            location.href = '/board/delete?boardNo=${b.boardNo}';
-        };
+        if ($delBtn !== null) {
+            //삭제버튼
+            $delBtn.onclick = e => {
+                if (!confirm('정말 삭제하시겠습니까?')) {
+                    return;
+                }
+                location.href = '/board/delete?boardNo=${b.boardNo}';
+            };
+        }
+
 
 
         //목록버튼
@@ -297,6 +311,11 @@
 
     <!-- 댓글관련 script -->
     <script>
+
+        // 로그인한 회원 계정명
+        const currentAccount = '${loginUser.account}'
+
+
         // 원본 글 번호
         let bno = '${b.boardNo}';
         // console.log('bno:', bno);
@@ -505,11 +524,17 @@
                         "</b></span>" +
                         "    </div><br>" +
                         "    <div class='row'>" +
-                        "       <div class='col-md-6'>" + rep.replyText + "</div>" +
-                        "       <div class='offset-md-2 col-md-4 text-right'>" +
-                        "         <a id='replyModBtn' class='btn btn-sm btn-outline-dark' data-bs-toggle='modal' data-bs-target='#replyModifyModal'>수정</a>&nbsp;" +
-                        "         <a id='replyDelBtn' class='btn btn-sm btn-outline-dark' href='#'>삭제</a>" +
-                        "       </div>" +
+                        "       <div class='col-md-6'>" + rep.replyText + "</div>" + 
+                        "           <div class='offset-md-2 col-md-4 text-right'>";
+
+                        if ('${loginUser.account}' === rep.account || '${loginUser.auth}' === 'ADMIN') {
+                            tag += 
+                            "               <a id='replyModBtn' class='btn btn-sm btn-outline-dark' data-bs-toggle='modal' data-bs-target='#replyModifyModal'>수정</a>&nbsp;" +
+                            "               <a id='replyDelBtn' class='btn btn-sm btn-outline-dark' href='#'>삭제</a>";
+                        }
+                        
+                    tag += 
+                        "           </div>" +
                         "    </div>" +
                         " </div>";
                 }

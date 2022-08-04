@@ -7,8 +7,8 @@
 
     <insert id="save">
         INSERT INTO tbl_board
-                (board_no, writer, title, content)
-        VALUES (seq_tbl_board.nextval, #{writer}, #{title}, #{content})
+                (board_no, writer, title, content, account)
+        VALUES (seq_tbl_board.nextval, #{writer}, #{title}, #{content}, #{account})
     </insert>
 
     <delete id="remove">

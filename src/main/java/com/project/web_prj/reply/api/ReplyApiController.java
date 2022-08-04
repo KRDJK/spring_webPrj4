@@ -3,10 +3,12 @@ package com.project.web_prj.reply.api;
 import com.project.web_prj.common.paging.Page;
 import com.project.web_prj.reply.domain.Reply;
 import com.project.web_prj.reply.service.ReplyService;
+import com.project.web_prj.util.LoginUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController
@@ -41,7 +43,11 @@ public class ReplyApiController {
     // 댓글 쓰기 요청
     @PostMapping("")
             // form을 쓰면 submit이 일어날 때 새로고침이 무조건 되어버린다.. 그럼 form이 아니라 json으로 받아야 함.
-    public String create(@RequestBody Reply reply) {
+    public String create(@RequestBody Reply reply, HttpSession session) {
+        // 22.08.04 계정명 컬럼 추가에 따른 처리 위한 코드 작성
+        reply.setAccount(LoginUtils.getCurrentMemberAccount(session));
+
+
         log.info("/api/v1/replies POST! - {}", reply);
 
         boolean flag = replyService.write(reply);

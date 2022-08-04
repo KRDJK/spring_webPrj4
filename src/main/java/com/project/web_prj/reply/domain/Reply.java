@@ -15,4 +15,5 @@ public class Reply {
     private String replyWriter; //댓글작성자
     private Date replyDate; //작성일자
     private Long boardNo; //원본 글번호
+    private String account; // 22.08.04 테이블 컬럼 추가에 따른 필드 추가
 }
