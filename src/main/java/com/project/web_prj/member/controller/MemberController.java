@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -94,6 +95,7 @@ public class MemberController {
                          Model model,
                          RedirectAttributes ra,
 //                         HttpServletRequest request,
+                         HttpServletResponse response,
                          HttpSession session // 스프링에서 바로 세션 정보를 활용할 수 있게 도와준다. 세션 정보 객체임.
     ) {
         // 체크박스 클릭을 안하면 autoLogin 필드의 기본값인 false로 처리하고, on으로 넘어온다면
@@ -104,7 +106,7 @@ public class MemberController {
 
 
         // 로그인 서비스 호출
-        LoginFlag flag = memberService.login(inputData, session);
+        LoginFlag flag = memberService.login(inputData, session, response);
 
 
         if (flag == LoginFlag.SUCCESS) {
