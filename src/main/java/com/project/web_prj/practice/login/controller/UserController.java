@@ -1,10 +1,11 @@
 package com.project.web_prj.practice.login.controller;
 
 import com.project.web_prj.practice.login.DTO.UserLoginDTO;
-import com.project.web_prj.practice.login.domain.DuplicateChecker;
+import com.project.web_prj.practice.login.DTO.DuplicateChecker;
 import com.project.web_prj.practice.login.domain.User;
 import com.project.web_prj.practice.login.service.LoginResult;
 import com.project.web_prj.practice.login.service.UserService;
+import com.project.web_prj.util.LoginUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -63,11 +65,12 @@ public class UserController {
     // 회원가입 반영 요청 처리
     @PostMapping("/register")
     public String register(User user, RedirectAttributes ra) {
+        log.info("/practice/register POST! - {}", user);
         boolean flag = userService.registerService(user);
 
 
 
-        return flag ? "redirect:/practice" : "redirect:/register";
+        return flag ? "redirect:/practice/" : "redirect:/register";
     }
 
 
@@ -88,11 +91,12 @@ public class UserController {
     public String login(UserLoginDTO inputData,
                         RedirectAttributes ra,
                         HttpSession session,
+                        HttpServletResponse response,
                         Model model) {
 
         log.info("/practice/login POST! - {}", inputData);
 
-        LoginResult loginResult = userService.loginService(inputData);
+        LoginResult loginResult = userService.loginService(inputData, session, response);
 
         String redirectURI = (String) session.getAttribute("redirectURI");
 
@@ -103,15 +107,22 @@ public class UserController {
         }
 
         ra.addFlashAttribute("loginMsg", loginResult);
-        return "redirect:/login";
+        return "redirect:/practice/login";
     }
 
 
 
     // 로그아웃 요청 처리
     @GetMapping("/logout")
-    public String logout() {
-        
-        return "";
+    public String logout(HttpSession session) {
+        log.info("/practice/logout GET!!");
+
+        // 로그인된 유저 정보 삭제
+        session.removeAttribute(LoginUtils.LOGIN_FLAG);
+
+        // 세션 무효화
+        session.invalidate();
+
+        return "redirect:/practice/";
     }
 }

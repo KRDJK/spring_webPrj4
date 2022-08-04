@@ -1,4 +1,4 @@
-package com.project.web_prj.practice.login.domain;
+package com.project.web_prj.practice.login.DTO;
 
 import lombok.*;
 

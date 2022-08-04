@@ -116,7 +116,7 @@
         }
 
         const loginMsg = '${loginMsg}';
-        if (loginMsg === 'NO_ACC') {
+        if (loginMsg === 'NO_ID') {
             alert('존재하지 않는 회원입니다.');
         } else if (loginMsg === 'NO_PW') {
             alert('비밀번호가 틀렸습니다.');
