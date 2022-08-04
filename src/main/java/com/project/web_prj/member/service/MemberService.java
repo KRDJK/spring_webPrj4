@@ -4,12 +4,14 @@ import com.project.web_prj.member.domain.Member;
 import com.project.web_prj.member.dto.AutoLoginDTO;
 import com.project.web_prj.member.dto.LoginDTO;
 import com.project.web_prj.member.repository.MemberMapper;
+import com.project.web_prj.util.LoginUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -27,7 +29,6 @@ public class MemberService {
     private final BCryptPasswordEncoder encoder;
 
 
-
     // 회원 가입 중간 처리
     public boolean signUp(Member member) {
 
@@ -42,7 +43,8 @@ public class MemberService {
 
     /**
      * 계정과 이메일의 중복을 확인하는 메서드
-     * @param type - 확인할 정보 ( ex: account or email )
+     *
+     * @param type  - 확인할 정보 ( ex: account or email )
      * @param value - 확인할 값
      * @return 중복이라면 true, 중복이 아니라면 false
      */
@@ -64,7 +66,6 @@ public class MemberService {
     }
 
 
-
     // 로그인 처리
     public LoginFlag login(LoginDTO inputData, HttpSession session, HttpServletResponse response) {
 
@@ -80,8 +81,8 @@ public class MemberService {
                 session.setAttribute("loginUser", foundMember);
                 // 세션 타임아웃(수명) 설정
                 session.setMaxInactiveInterval(60 * 60); // 기본값이 30분이지만, 1시간으로 임의 설정하기
-                
-                
+
+
                 // 자동로그인 처리
                 if (inputData.isAutoLogin()) { // 자동로그인을 체크한 사람이라면~~
                     log.info("checked auto login user!!");
@@ -104,16 +105,16 @@ public class MemberService {
 
         // 1. 자동로그인 쿠키 생성 - 쿠키의 값으로 현재 세션의 아이디를 저장한다.
         String sessionId = session.getId();
-        Cookie cookie = new Cookie("autoLoginCookie", sessionId);
+        Cookie cookie = new Cookie(LoginUtils.LOGIN_COOKIE, sessionId);
 
 
         // 2. 쿠키 설정 (수명, 사용 경로)
         int limitTime = 60 * 60 * 24 * 90; // 90일에 대한 초단위 표현
         cookie.setMaxAge(limitTime);
         cookie.setPath("/"); // 전체 경로에서 사용할 수 있어야 한다.
-                            // 사용자가 어떤 경로에서 접근을 하더라도 자동로그인이 되어야 하기 때문!!
-        
-        
+        // 사용자가 어떤 경로에서 접근을 하더라도 자동로그인이 되어야 하기 때문!!
+
+
         // 3. 자동로그인을 체크하고 로그인에 성공한 해당 유저의 로컬에 쿠키 전송
         response.addCookie(cookie);
 
@@ -134,5 +135,26 @@ public class MemberService {
 
 
         memberMapper.saveAutoLoginValue(dto);
+    }
+
+
+    // 자동로그인 해제 중간처리 메서드
+    public void autoLogout(String account, HttpServletRequest request, HttpServletResponse response) {
+
+        // 1. 자동로그인 쿠키를 불러온 뒤 수명을 0초로 세팅해서 클라이언트 로컬에 돌려보낸다.
+        Cookie cookie = LoginUtils.getAutoLoginCookie(request);
+
+        if (cookie != null) {
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+
+
+            // 2. DB 처리
+            AutoLoginDTO dto = new AutoLoginDTO();
+            dto.setSessionId("none");
+            dto.setLimitTime(new Date());
+            dto.setAccount(account);
+            memberMapper.saveAutoLoginValue(dto);
+        }
     }
 }
