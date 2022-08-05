@@ -197,4 +197,51 @@ public class KakaoService implements OAuthService, OAuthValue {
         }
         return null;
     }
+
+
+    public void logout(String accessToken) throws IOException {
+        // 1.
+        String reqUri = "https://kapi.kakao.com/v1/user/logout";
+
+        // 2. server to server 요청
+        // 2-a. 현 로컬 서버에서 카카오 서버로 server to server 요청
+        //    문자타입의 URL을 객체로 포장
+        URL url = new URL(reqUri);// java.net 활용 url 객체 생성 및 reqUri 포장!!
+
+
+
+        // 2-b. 해당 요청을 연결하고 그 연결정보를 담을 Connection 객체 생성
+//        URLConnection conn = url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection(); // URLConnection의 구현체(자식놈)으로 형변환
+
+        // 2-c. 요청 정보 설정
+        conn.setRequestMethod("POST"); // 요청 방식 설정
+
+        // 요청 헤더 설정
+        conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+        conn.setDoOutput(true); // 응답 결과를 받겠다는 뜻!! 무언가 do 된것에 대한 output을 받겠다!
+
+
+        int responseCode = conn.getResponseCode();
+        log.info("logout resCode - {}", responseCode);
+
+
+        // 3. 응답 데이터 받기 (REST API 방식으로 서버간 통신을 했기 때문에 JSON 형식으로 보냈고, 받을 때도 JSON으로 받았다.)
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+
+
+            // 3-a. 응답데이터를 입력스트림으로부터 받기
+            String responseData = br.readLine();
+
+            log.info("responseData - {}", responseData); // 로그를 찍어보니 JSON 형태로 날아오네!
+            // 이 때는 JSON 변환을 자동으로 안해준다고 함. 스프링을 현재 안쓰고 짜고 있기 때문인듯.
+            // JSON 파싱 라이브러리를 사용하자.
+
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
