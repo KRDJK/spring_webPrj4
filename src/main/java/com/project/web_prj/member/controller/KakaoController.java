@@ -62,10 +62,10 @@ public class KakaoController {
             session.setAttribute(LoginUtils.LOGIN_FROM, SNSLogin.KAKAO); // 각 SNS 플랫폼 별로 로그아웃 방식이 다르기 때문에 그 때 구분을 위해서!!
 
             session.setAttribute("accessToken", accessToken);
-            return "redirect:/kakao-test";
+            return "redirect:/";
         }
 
-        return "redirect:/kakao-test";
+        return "redirect:/member/sign-in";
     }
 
 

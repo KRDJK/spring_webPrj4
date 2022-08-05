@@ -1,7 +1,10 @@
 package com.project.web_prj.member.controller;
 
 import com.project.web_prj.member.domain.Member;
+import com.project.web_prj.member.domain.OAuthValue;
+import com.project.web_prj.member.domain.SNSLogin;
 import com.project.web_prj.member.dto.LoginDTO;
+import com.project.web_prj.member.service.KakaoService;
 import com.project.web_prj.member.service.LoginFlag;
 import com.project.web_prj.member.service.MemberService;
 import com.project.web_prj.util.LoginUtils;
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Controller
 @Log4j2
@@ -25,6 +29,7 @@ import javax.servlet.http.HttpSession;
 public class MemberController {
 
     private final MemberService memberService;
+    private final KakaoService kakaoService;
 
 
 
@@ -78,7 +83,10 @@ public class MemberController {
 
     // 로그인 화면을 열어주는 요청처리
     @GetMapping("/sign-in")
-    public void signIn(@ModelAttribute("message") String message, HttpServletRequest request) {
+    public void signIn(@ModelAttribute("message") String message,
+                       HttpServletRequest request,
+                       Model model
+    ) {
         log.info("/member/sign-in GET!! - forwarding to sign-in.jsp");
 
         // 요청 정보 헤더 안에는 Referer 라는 키가 있는데
@@ -87,7 +95,13 @@ public class MemberController {
         log.info("referer: {}", referer);
 
         request.getSession().setAttribute("redirectURI", referer);
+
+
+        model.addAttribute("kakaoAppKey", OAuthValue.KAKAO_APP_KEY);
+        model.addAttribute("kakaoRedirect", OAuthValue.KAKAO_REDIRECT_URI);
+
     }
+
 
 
     // 실질적 로그인 요청 처리
@@ -127,7 +141,7 @@ public class MemberController {
 
     // 로그아웃 요청 처리
     @GetMapping("/sign-out")
-    public String signOut(HttpServletRequest request, HttpServletResponse response) {
+    public String signOut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         HttpSession session = request.getSession();
 
@@ -138,6 +152,23 @@ public class MemberController {
                 memberService.autoLogout(LoginUtils.getCurrentMemberAccount(session), request, response);
             }
 
+
+            // 22.08.05 추가 SNS 로그인 상태라면 해당 SNS 로그아웃 처리를 진행
+            SNSLogin from = (SNSLogin) session.getAttribute(LoginUtils.LOGIN_FROM);
+            switch (from) {
+                case KAKAO:
+                    kakaoService.logout((String) session.getAttribute("accountToken"));
+                    break;
+                case NAVER:
+
+                    break;
+                case GOOGLE:
+
+                    break;
+                case FACEBOOK:
+
+                    break;
+            }
 
 
             // 1. 세션에서 정보를 삭제한다.

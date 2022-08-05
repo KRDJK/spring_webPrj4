@@ -233,12 +233,7 @@ public class KakaoService implements OAuthService, OAuthValue {
             // 3-a. 응답데이터를 입력스트림으로부터 받기
             String responseData = br.readLine();
 
-            log.info("responseData - {}", responseData); // 로그를 찍어보니 JSON 형태로 날아오네!
-            // 이 때는 JSON 변환을 자동으로 안해준다고 함. 스프링을 현재 안쓰고 짜고 있기 때문인듯.
-            // JSON 파싱 라이브러리를 사용하자.
-
-
-
+            log.info("responseData - {}", responseData);
 
         } catch (Exception e) {
             e.printStackTrace();
