@@ -5,10 +5,19 @@
 
 <mapper namespace="com.project.web_prj.board.repository.BoardMapper">
 
+<!--    오라클 버전.. -->
+<!--    <insert id="save">-->
+<!--        INSERT INTO tbl_board-->
+<!--                (board_no, writer, title, content, account)-->
+<!--        VALUES (seq_tbl_board.nextval, #{writer}, #{title}, #{content}, #{account})-->
+<!--    </insert>-->
+
+
+<!--    maria DB 버전 -->
     <insert id="save">
         INSERT INTO tbl_board
-                (board_no, writer, title, content, account)
-        VALUES (seq_tbl_board.nextval, #{writer}, #{title}, #{content}, #{account})
+            (writer, title, content, account)
+        VALUES (#{writer}, #{title}, #{content}, #{account})
     </insert>
 
     <delete id="remove">
@@ -39,14 +48,22 @@
         FROM tbl_board
     </select>
 
+<!--    <select id="getTotalCount2" resultType="int">-->
+<!--        SELECT COUNT(board_no) AS cnt-->
+<!--        FROM tbl_board-->
+<!--        <if test="type == 'title'">WHERE title LIKE '%' || #{keyword} || '%'</if>-->
+<!--        <if test="type == 'writer'">WHERE writer LIKE '%' || #{keyword} || '%'</if>-->
+<!--        <if test="type == 'content'">WHERE content LIKE '%' || #{keyword} || '%'</if>-->
+<!--        <if test="type == 'tc'">WHERE title LIKE '%' || #{keyword} || '%'-->
+<!--            OR content LIKE '%' || #{keyword} || '%'</if>-->
+<!--    </select>-->
+
+
+    <!--    mariaDB 버전!!! -->
     <select id="getTotalCount2" resultType="int">
         SELECT COUNT(board_no) AS cnt
         FROM tbl_board
-        <if test="type == 'title'">WHERE title LIKE '%' || #{keyword} || '%'</if>
-        <if test="type == 'writer'">WHERE writer LIKE '%' || #{keyword} || '%'</if>
-        <if test="type == 'content'">WHERE content LIKE '%' || #{keyword} || '%'</if>
-        <if test="type == 'tc'">WHERE title LIKE '%' || #{keyword} || '%'
-            OR content LIKE '%' || #{keyword} || '%'</if>
+        <include refid="search" />
     </select>
 
 
@@ -63,33 +80,64 @@
 <!--    </select>-->
 
 
+<!--    <select id="findAll" resultMap="boardMap" parameterType="com.project.web_prj.common.paging.Page">-->
+<!--        SELECT  *-->
+<!--        FROM (SELECT ROWNUM rn, v_board.*-->
+<!--                FROM (-->
+<!--                        SELECT *-->
+<!--                        FROM tbl_board-->
+<!--                        ORDER BY board_no DESC-->
+<!--                        ) v_board)-->
+<!--        WHERE rn BETWEEN (#{pageNum} - 1) * #{amount} + 1 AND (#{pageNum} * #{amount})-->
+<!--    </select>-->
+
+
+    <!--    mariaDB 버전!!! -->
     <select id="findAll" resultMap="boardMap" parameterType="com.project.web_prj.common.paging.Page">
         SELECT  *
-        FROM (SELECT ROWNUM rn, v_board.*
-                FROM (
-                        SELECT *
-                        FROM tbl_board
-                        ORDER BY board_no DESC
-                        ) v_board)
-        WHERE rn BETWEEN (#{pageNum} - 1) * #{amount} + 1 AND (#{pageNum} * #{amount})
+        FROM tbl_board
+        ORDER BY board_no DESC
+<!--        amount의 getter가 없다면 #{amount}로 값을 넣을 수가 없다. -->
+        LIMIT #{start}, #{amount}
     </select>
 
 
+<!--    <select id="findAll2" resultMap="boardMap" parameterType="com.project.web_prj.common.paging.Page">-->
+<!--        SELECT  *-->
+<!--        FROM (SELECT ROWNUM rn, v_board.*-->
+<!--                FROM (-->
+<!--                        SELECT *-->
+<!--                        FROM tbl_board-->
+<!--                        &lt;!&ndash; type = value 에서 value 값을 한글자로 주면 char 타입으로 인식하기 때문에 한글자 입력은 피하라! &ndash;&gt;-->
+<!--                        <if test="type == 'title'">WHERE title LIKE '%' || #{keyword} || '%'</if>-->
+<!--                        <if test="type == 'writer'">WHERE writer LIKE '%' || #{keyword} || '%'</if>-->
+<!--                        <if test="type == 'content'">WHERE content LIKE '%' || #{keyword} || '%'</if>-->
+<!--                        <if test="type == 'tc'">WHERE title LIKE '%' || #{keyword} || '%'-->
+<!--                            OR content LIKE '%' || #{keyword} || '%'</if>-->
+<!--                        ORDER BY board_no DESC-->
+<!--                        ) v_board)-->
+<!--        WHERE rn BETWEEN (#{pageNum} - 1) * #{amount} + 1 AND (#{pageNum} * #{amount})-->
+<!--    </select>-->
+
+    <!--  검색 조건문 분리  -->
+    <sql id="search">
+        <!-- 문자열 결합 연산자 || 이거는 오라클에서만 먹힌다. mariaDB, mysql에서는 concat 함수를 사용해야 한다!! -->
+        <if test="type == 'title'">WHERE title LIKE CONCAT('%', #{keyword}, '%')</if>
+        <if test="type == 'writer'">WHERE writer LIKE CONCAT('%', #{keyword}, '%')</if>
+        <if test="type == 'content'">WHERE content LIKE CONCAT('%', #{keyword}, '%')</if>
+        <if test="type == 'tc'">WHERE title LIKE CONCAT('%', #{keyword}, '%')
+            OR content LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+    </sql>
+
+
+    <!--    mariaDB 버전!!! -->
     <select id="findAll2" resultMap="boardMap" parameterType="com.project.web_prj.common.paging.Page">
         SELECT  *
-        FROM (SELECT ROWNUM rn, v_board.*
-                FROM (
-                        SELECT *
-                        FROM tbl_board
-                        <!-- type = value 에서 value 값을 한글자로 주면 char 타입으로 인식하기 때문에 한글자 입력은 피하라! -->
-                        <if test="type == 'title'">WHERE title LIKE '%' || #{keyword} || '%'</if>
-                        <if test="type == 'writer'">WHERE writer LIKE '%' || #{keyword} || '%'</if>
-                        <if test="type == 'content'">WHERE content LIKE '%' || #{keyword} || '%'</if>
-                        <if test="type == 'tc'">WHERE title LIKE '%' || #{keyword} || '%'
-                            OR content LIKE '%' || #{keyword} || '%'</if>
-                        ORDER BY board_no DESC
-                        ) v_board)
-        WHERE rn BETWEEN (#{pageNum} - 1) * #{amount} + 1 AND (#{pageNum} * #{amount})
+        FROM tbl_board
+        <include refid="search" />
+        ORDER BY board_no DESC
+        LIMIT #{start}, #{amount}
     </select>
 
 
@@ -101,15 +149,23 @@
 
 
     <!-- 첨부파일 추가 -->
+<!--    <insert id="addFile">-->
+
+<!--        &lt;!&ndash; bno를 알려면 일단 게시물이 save 되어야 하는데..? 시퀀스를 활용하니까.. 그래서 .currval 활용 &ndash;&gt;-->
+
+<!--        INSERT INTO file_upload-->
+<!--            (file_name, bno)-->
+<!--        VALUES-->
+<!--            (#{fileName}, seq_tbl_board.currval)-->
+<!--    </insert>-->
+
+<!--    mariaDB 버전!!! -->
     <insert id="addFile">
-
-        <!-- bno를 알려면 일단 게시물이 save 되어야 하는데..? 시퀀스를 활용하니까.. 그래서 .currval 활용 -->
-
         INSERT INTO file_upload
-            (file_name, bno)
+        (file_name, bno)
         VALUES
-            (#{fileName}, seq_tbl_board.currval)
-
+        (#{fileName}, LAST_INSERT_ID())
+                        <!-- LAST_INSERT_ID()을 사용하면 bno의 가장 최근 insert된 번호를 가져온다. -->
     </insert>
 
 

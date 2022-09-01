@@ -19,10 +19,18 @@ public class DataBaseConfig {
     public DataSource dataSource() { // 메서드 명은 중요하지 않다.
 
         HikariConfig config = new HikariConfig();
-        config.setUsername("spring4");
-        config.setPassword("1234");
-        config.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:xe");
-        config.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+        // ============= Oracle ==================== //
+//        config.setUsername("spring4");
+//        config.setPassword("1234");
+//        config.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:xe");
+//        config.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+
+
+        // ============= MariaDB ==================== //
+        config.setUsername("root");
+        config.setPassword("mariadb");
+        config.setJdbcUrl("jdbc:mariadb://localhost:3306/spring4");
+        config.setDriverClassName("org.mariadb.jdbc.Driver");
 
         return new HikariDataSource(config);
     }

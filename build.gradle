@@ -34,6 +34,9 @@ dependencies {
 	//오라클 라이브러리 (11g edition - gradle, maven 라이센스 문제 공식 지원 불가)
 	implementation fileTree(dir: '/src/main/webapp/WEB-INF/lib', include: ['*.jar'])
 
+	// https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
+	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.6'
+
 	//마이바티스 라이브러리
 	implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.0"
 
@@ -49,6 +52,9 @@ dependencies {
 
 	//gson (JSON 파싱 라이브러리)
 	implementation 'com.google.code.gson:gson:2.8.5'
+
+	// 매번 새로고침 하지 않아도 jsp 변동사항 즉시 확인 가능하게 도와주는 라이브러리(?)
+	implementation 'org.springframework.boot:spring-boot-devtools'
 }
 
 tasks.named('test') {

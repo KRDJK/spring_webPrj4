@@ -13,12 +13,22 @@
         <result property="boardNo" column="board_no" />
     </resultMap>
 
+<!--    <insert id="save">-->
+<!--        INSERT INTO tbl_reply-->
+<!--            (reply_no, reply_text, reply_writer, board_no, account)-->
+<!--        VALUES-->
+<!--            (seq_tbl_reply.nextval, #{replyText}, #{replyWriter}, #{boardNo}, #{account})-->
+<!--    </insert>-->
+
+
+    <!--    mariaDB 버전! -->
     <insert id="save">
         INSERT INTO tbl_reply
-            (reply_no, reply_text, reply_writer, board_no, account)
+            (reply_text, reply_writer, board_no, account)
         VALUES
-            (seq_tbl_reply.nextval, #{replyText}, #{replyWriter}, #{boardNo}, #{account})
+            (#{replyText}, #{replyWriter}, #{boardNo}, #{account})
     </insert>
+
 
     <!--  댓글 수정  -->
     <update id="modify">
@@ -46,18 +56,27 @@
     </select>
 
     <!--  댓글 목록 조회  -->
+<!--    <select id="findAll" resultMap="replyMap">-->
+<!--        SELECT  *-->
+<!--        FROM (-->
+<!--            SELECT ROWNUM rn, v_reply.*-->
+<!--            FROM (-->
+<!--                SELECT *-->
+<!--                FROM tbl_reply-->
+<!--                WHERE board_no = #{boardNo}-->
+<!--                ORDER BY board_no DESC-->
+<!--            ) v_reply-->
+<!--        )-->
+<!--        WHERE rn BETWEEN (#{page.pageNum} - 1) * #{page.amount} + 1 AND (#{page.pageNum} * #{page.amount})-->
+<!--    </select>-->
+
+
+<!--    mariaDB 버전! -->
     <select id="findAll" resultMap="replyMap">
-        SELECT  *
-        FROM (
-            SELECT ROWNUM rn, v_reply.*
-            FROM (
-                SELECT *
-                FROM tbl_reply
-                WHERE board_no = #{boardNo}
-                ORDER BY board_no DESC
-            ) v_reply
-        )
-        WHERE rn BETWEEN (#{page.pageNum} - 1) * #{page.amount} + 1 AND (#{page.pageNum} * #{page.amount})
+        SELECT *
+        FROM tbl_reply
+        ORDER BY reply_no
+        LIMIT #{page.start}, #{page.amount}
     </select>
 
     <select id="getReplyCount" resultType="int">

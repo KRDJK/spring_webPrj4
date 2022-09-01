@@ -12,6 +12,17 @@ CREATE TABLE tbl_board (
     CONSTRAINT pk_tbl_board PRIMARY KEY (board_no)
 );
 
+-- 22.09.01 Maria DB 버전
+CREATE TABLE tbl_board (
+    board_no INT(10) AUTO_INCREMENT, -- 시퀀스 역할을 수행한다
+    writer VARCHAR(20) NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    content TEXT, -- clob
+    view_cnt INT(10) DEFAULT 0,
+    reg_date DATETIME DEFAULT current_timestamp, -- date, sysdate가 current_timestamp
+    CONSTRAINT pk_tbl_board PRIMARY KEY (board_no)
+);
+
 
 -- 22.07.19 게시판 paging을 하기 위해 SELECT 문을 다시 짜야 한다.
 -- ROWNUM은 모든 테이블에 존재하는 가상 컬럼!! 그냥 행번호를 출력할 뿐이다. 데이터 순번일뿐.

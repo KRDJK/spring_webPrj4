@@ -37,4 +37,10 @@ public class Page {
         }
         this.amount = amount;
     }
+
+    
+    // Maria DB  LIMIT 첫번째 숫자 구하기
+    public int getStart() { // getBanana라고 하면 #{banana}를 사용할 수 있다!!
+        return (pageNum -1) * amount;
+    }
 }

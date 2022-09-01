@@ -150,4 +150,20 @@ class BoardMapperTest {
         assertEquals("a123", member.getAccount());
         assertEquals("COMMON", member.getAuth().toString());
     }
+
+
+    @Test
+    @DisplayName("300개의 게시물을 삽입해야 한다.")
+    void bulkInsert() {
+
+        Board board;
+        for (int i = 1; i <= 300; i++) {
+            board = new Board();
+            board.setAccount("kdf556");
+            board.setTitle("제목" + i);
+            board.setWriter("길동이" + i);
+            board.setContent("안녕하세요요요요요요요~~" + i);
+            mapper.save(board);
+        }
+    }
 }

@@ -32,7 +32,6 @@ public class MemberController {
     private final KakaoService kakaoService;
 
 
-
     // 회원가입 양식 화면 띄우기
     @GetMapping("/sign-up")
     public void signUp() {
@@ -67,7 +66,6 @@ public class MemberController {
     }
 
 
-
     // 아이디, 이메일 중복확인 비동기 요청 처리
     @GetMapping("/check")
     @ResponseBody
@@ -78,7 +76,6 @@ public class MemberController {
 
         return new ResponseEntity<>(flag, HttpStatus.OK);
     }
-
 
 
     // 로그인 화면을 열어주는 요청처리
@@ -101,7 +98,6 @@ public class MemberController {
         model.addAttribute("kakaoRedirect", OAuthValue.KAKAO_REDIRECT_URI);
 
     }
-
 
 
     // 실질적 로그인 요청 처리
@@ -138,7 +134,6 @@ public class MemberController {
     }
 
 
-
     // 로그아웃 요청 처리
     @GetMapping("/sign-out")
     public String signOut(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -155,21 +150,22 @@ public class MemberController {
 
             // 22.08.05 추가 SNS 로그인 상태라면 해당 SNS 로그아웃 처리를 진행
             SNSLogin from = (SNSLogin) session.getAttribute(LoginUtils.LOGIN_FROM);
-            switch (from) {
-                case KAKAO:
-                    kakaoService.logout((String) session.getAttribute("accountToken"));
-                    break;
-                case NAVER:
+            if (from != null) {
+                switch (from) {
+                    case KAKAO:
+                        kakaoService.logout((String) session.getAttribute("accountToken"));
+                        break;
+                    case NAVER:
 
-                    break;
-                case GOOGLE:
+                        break;
+                    case GOOGLE:
 
-                    break;
-                case FACEBOOK:
+                        break;
+                    case FACEBOOK:
 
-                    break;
+                        break;
+                }
             }
-
 
             // 1. 세션에서 정보를 삭제한다.
             session.removeAttribute(LoginUtils.LOGIN_FLAG); // "loginUser" 속성 지워버리기 그래야 로그인한걸로 인식 못하니까
