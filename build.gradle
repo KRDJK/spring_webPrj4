@@ -5,6 +5,12 @@ plugins {
 	id 'war'
 }
 
+
+// 2022. 09. 02 AWS 배포 학습 도중
+// 내장 톰캣 충돌방지
+bootWar.enabled=false;
+war.enabled=true;
+
 group = 'com.project'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
@@ -58,5 +64,7 @@ dependencies {
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+//	useJUnitPlatform()
+	exclude '**/*' // 빌드할 때 테스트 하지 말라는 뜻!! 원래는 서버 실행을 할 때 테스트 등록된걸 싹 다 돌리고 실행을 한다.
+				   // 하나라도 잘못된 테스트가 있다면 서버 실행이 잘 안됨!!
 }

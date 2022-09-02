@@ -25,7 +25,8 @@ import java.util.List;
 @Log4j2
 public class UploadController {
 
-    private static final String UPLOAD_PATH = "E:\\sl_basic\\upload";
+//    private static final String UPLOAD_PATH = "E:\\sl_basic\\upload";
+    private static final String UPLOAD_PATH = "/home/ec2-user/sl_dev/upload";
 
 
 
